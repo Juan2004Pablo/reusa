@@ -8,6 +8,7 @@ use App\Enums\ItemCondition;
 use App\Enums\PublicationModality;
 use App\Enums\PublicationSort;
 use App\Enums\PublicationStatus;
+use App\Support\LikePattern;
 use App\Support\PublicationFilters;
 use Carbon\CarbonInterface;
 use Database\Factories\PublicationFactory;
@@ -172,7 +173,7 @@ class Publication extends Model
             : (preg_split('/\s+/u', mb_strtolower(trim($text)), -1, PREG_SPLIT_NO_EMPTY) ?: []);
 
         foreach (array_slice($words, 0, 5) as $word) {
-            $pattern = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $word).'%';
+            $pattern = LikePattern::contains($word);
 
             $query->where(function (Builder $q) use ($pattern): void {
                 $q->whereRaw("LOWER(title) LIKE ? ESCAPE '!'", [$pattern])
