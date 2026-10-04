@@ -157,6 +157,8 @@ return [
     'ulid' => ':Attribute debe ser un ULID válido.',
     'uuid' => ':Attribute debe ser un UUID válido.',
 
+    'leaf_category' => 'Selecciona una subcategoría válida.',
+
     'custom' => [
         'terms' => [
             'accepted' => 'Debes aceptar los términos y condiciones para crear tu cuenta.',
