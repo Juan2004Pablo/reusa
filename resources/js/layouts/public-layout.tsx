@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Menu } from 'lucide-react';
+import { Menu, Plus } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import Brand from '@/components/brand';
 import { Button } from '@/components/ui/button';
@@ -18,11 +18,13 @@ import {
 } from '@/components/ui/sheet';
 import { UserInfo } from '@/components/user-info';
 import { UserMenuContent } from '@/components/user-menu-content';
-import { dashboard, login, register, terms } from '@/routes';
+import { login, register, terms } from '@/routes';
+import { index as myPublications } from '@/routes/my-publications';
+import { create, index as catalog } from '@/routes/publications';
 import type { NavItem } from '@/types';
 
 /** Enlaces de la navegación principal del sitio público. */
-const navItems: NavItem[] = [];
+const navItems: NavItem[] = [{ title: 'Catálogo', href: catalog() }];
 
 export default function PublicLayout({ children }: PropsWithChildren) {
     const { auth } = usePage().props;
@@ -58,6 +60,12 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                     </nav>
 
                     <div className="ml-auto hidden items-center gap-2 md:flex">
+                        <Button size="sm" asChild>
+                            <Link href={create()}>
+                                <Plus aria-hidden />
+                                Publicar objeto
+                            </Link>
+                        </Button>
                         {user ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -121,14 +129,20 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                                         </Link>
                                     </Button>
                                 ))}
+                                <Button asChild>
+                                    <Link href={create()}>
+                                        <Plus aria-hidden />
+                                        Publicar objeto
+                                    </Link>
+                                </Button>
                                 {user ? (
                                     <Button
                                         variant="ghost"
                                         className="justify-start"
                                         asChild
                                     >
-                                        <Link href={dashboard()}>
-                                            Mi cuenta
+                                        <Link href={myPublications()}>
+                                            Mis publicaciones
                                         </Link>
                                     </Button>
                                 ) : (

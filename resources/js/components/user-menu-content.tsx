@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Package, Settings, ShieldCheck } from 'lucide-react';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -9,6 +9,8 @@ import {
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
+import { dashboard as adminDashboard } from '@/routes/admin';
+import { index as myPublications } from '@/routes/my-publications';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 
@@ -33,6 +35,29 @@ export function UserMenuContent({ user }: Props) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                    <Link
+                        className="block w-full cursor-pointer"
+                        href={myPublications()}
+                        prefetch
+                        onClick={cleanup}
+                    >
+                        <Package className="mr-2" />
+                        Mis publicaciones
+                    </Link>
+                </DropdownMenuItem>
+                {user.is_admin && (
+                    <DropdownMenuItem asChild>
+                        <Link
+                            className="block w-full cursor-pointer"
+                            href={adminDashboard()}
+                            onClick={cleanup}
+                        >
+                            <ShieldCheck className="mr-2" />
+                            Administración
+                        </Link>
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild>
                     <Link
                         className="block w-full cursor-pointer"

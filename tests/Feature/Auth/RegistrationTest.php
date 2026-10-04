@@ -33,7 +33,7 @@ test('new users can register accepting the terms', function () {
     $response = $this->post(route('register.store'), registrationData());
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('my-publications.index', absolute: false));
 
     $user = User::where('email', 'test@example.com')->firstOrFail();
 

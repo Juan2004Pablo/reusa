@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyPublicationController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\PublicationStatusController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 Route::inertia('terms', 'terms')->name('terms');
 
 Route::get('publications', [PublicationController::class, 'index'])->name('publications.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
     // `create` debe declararse antes que `{publication}` para no confundirse con un slug.
     Route::get('publications/create', [PublicationController::class, 'create'])->name('publications.create');
     Route::post('publications', [PublicationController::class, 'store'])->name('publications.store');
