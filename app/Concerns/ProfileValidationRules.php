@@ -1,23 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Concerns;
 
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 
 trait ProfileValidationRules
 {
     /**
      * Get the validation rules used to validate user profiles.
      *
-     * @return array<string, array<int, ValidationRule|array<mixed>|string>>
+     * @return array<string, array<int, ValidationRule|Unique|array<mixed>|string>>
      */
     protected function profileRules(?int $userId = null): array
     {
         return [
             'name' => $this->nameRules(),
             'email' => $this->emailRules($userId),
+            'phone' => $this->phoneRules(),
+            'community' => $this->communityRules(),
         ];
     }
 
@@ -34,7 +39,7 @@ trait ProfileValidationRules
     /**
      * Get the validation rules used to validate user emails.
      *
-     * @return array<int, ValidationRule|array<mixed>|string>
+     * @return array<int, ValidationRule|Unique|array<mixed>|string>
      */
     protected function emailRules(?int $userId = null): array
     {
@@ -47,5 +52,25 @@ trait ProfileValidationRules
                 ? Rule::unique(User::class)
                 : Rule::unique(User::class)->ignore($userId),
         ];
+    }
+
+    /**
+     * Optional phone number: digits, spaces and the usual + ( ) - separators.
+     *
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function phoneRules(): array
+    {
+        return ['nullable', 'string', 'max:20', 'regex:/^[0-9+()\-\s]{7,20}$/'];
+    }
+
+    /**
+     * Optional community / sector (free text).
+     *
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function communityRules(): array
+    {
+        return ['nullable', 'string', 'max:120'];
     }
 }

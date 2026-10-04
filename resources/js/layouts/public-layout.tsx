@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/sheet';
 import { UserInfo } from '@/components/user-info';
 import { UserMenuContent } from '@/components/user-menu-content';
-import { dashboard, login, register } from '@/routes';
+import { dashboard, login, register, terms } from '@/routes';
 import type { NavItem } from '@/types';
 
 /** Enlaces de la navegación principal del sitio público. */
@@ -168,10 +168,20 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                             vende lo que ya no usas.
                         </p>
                     </div>
-                    <p>
-                        Proyecto Integrador · Politécnico Colombiano Jaime Isaza
-                        Cadavid · ODS 12
-                    </p>
+                    <div className="space-y-1 md:text-right">
+                        <p>
+                            <Link
+                                href={terms()}
+                                className="font-medium text-foreground underline underline-offset-4"
+                            >
+                                Términos y condiciones
+                            </Link>
+                        </p>
+                        <p>
+                            Proyecto Integrador · Politécnico Colombiano Jaime
+                            Isaza Cadavid · ODS 12
+                        </p>
+                    </div>
                 </div>
             </footer>
         </div>

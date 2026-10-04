@@ -79,6 +79,52 @@ export default function Profile() {
                                 />
                             </div>
 
+                            <div className="grid gap-2">
+                                <Label htmlFor="phone">
+                                    Teléfono{' '}
+                                    <span className="font-normal text-muted-foreground">
+                                        (opcional)
+                                    </span>
+                                </Label>
+
+                                <Input
+                                    id="phone"
+                                    type="tel"
+                                    className="mt-1 block w-full"
+                                    defaultValue={auth.user?.phone ?? ''}
+                                    name="phone"
+                                    autoComplete="tel"
+                                    placeholder="300 123 4567"
+                                />
+
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.phone}
+                                />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="community">
+                                    Comunidad o sector{' '}
+                                    <span className="font-normal text-muted-foreground">
+                                        (opcional)
+                                    </span>
+                                </Label>
+
+                                <Input
+                                    id="community"
+                                    className="mt-1 block w-full"
+                                    defaultValue={auth.user?.community ?? ''}
+                                    name="community"
+                                    placeholder="Ej.: Laureles, Belén, Robledo"
+                                />
+
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.community}
+                                />
+                            </div>
+
                             <div className="flex items-center gap-4">
                                 <Button
                                     disabled={processing}

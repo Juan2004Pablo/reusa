@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 
 test('profile page is displayed', function () {
@@ -82,4 +84,40 @@ test('correct password must be provided to delete account', function () {
         ->assertRedirect(route('profile.edit'));
 
     expect($user->fresh())->not->toBeNull();
+});
+
+test('phone and community can be updated and cleared', function () {
+    $user = User::factory()->withContact()->create();
+
+    $this->actingAs($user)->patch(route('profile.update'), [
+        'name' => $user->name,
+        'email' => $user->email,
+        'phone' => '310 555 1234',
+        'community' => 'Belén',
+    ])->assertSessionHasNoErrors();
+
+    expect($user->refresh()->phone)->toBe('310 555 1234')
+        ->and($user->community)->toBe('Belén');
+
+    $this->actingAs($user)->patch(route('profile.update'), [
+        'name' => $user->name,
+        'email' => $user->email,
+        'phone' => '',
+        'community' => '',
+    ])->assertSessionHasNoErrors();
+
+    expect($user->refresh()->phone)->toBeNull()
+        ->and($user->community)->toBeNull();
+});
+
+test('profile update ignores attempts to change the role', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->patch(route('profile.update'), [
+        'name' => $user->name,
+        'email' => $user->email,
+        'role' => 'admin',
+    ]);
+
+    expect($user->refresh()->isAdmin())->toBeFalse();
 });
