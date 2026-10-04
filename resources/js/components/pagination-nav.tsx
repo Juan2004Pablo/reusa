@@ -25,7 +25,7 @@ function pageWindow(current: number, last: number): (number | 'gap')[] {
 }
 
 const base =
-    'inline-flex h-9 min-w-9 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none';
+    'inline-flex h-9 min-w-9 items-center justify-center rounded-sm border px-3 font-mono text-sm font-medium tabular-nums transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none';
 
 export default function PaginationNav({
     currentPage,

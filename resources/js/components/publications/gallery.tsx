@@ -43,7 +43,7 @@ export default function Gallery({
                 }
             }}
         >
-            <div className="relative overflow-hidden rounded-xl border bg-muted">
+            <div className="relative overflow-hidden rounded-md bg-paper">
                 <CoverImage
                     src={images[current].url}
                     alt={`${title} (foto ${current + 1} de ${total})`}
@@ -55,7 +55,7 @@ export default function Gallery({
                             type="button"
                             variant="secondary"
                             size="icon"
-                            className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full opacity-90 shadow"
+                            className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-background/90 shadow-sm"
                             onClick={() => go(current - 1)}
                             aria-label="Foto anterior"
                         >
@@ -65,14 +65,14 @@ export default function Gallery({
                             type="button"
                             variant="secondary"
                             size="icon"
-                            className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full opacity-90 shadow"
+                            className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-background/90 shadow-sm"
                             onClick={() => go(current + 1)}
                             aria-label="Foto siguiente"
                         >
                             <ChevronRight aria-hidden />
                         </Button>
                         <span
-                            className="absolute right-3 bottom-3 rounded-full bg-background/90 px-2.5 py-0.5 text-xs font-medium"
+                            className="absolute right-3 bottom-3 rounded-sm bg-background/90 px-2 py-0.5 font-mono text-xs font-medium tabular-nums"
                             aria-hidden
                         >
                             {current + 1} / {total}
@@ -91,9 +91,9 @@ export default function Gallery({
                                 aria-label={`Ver foto ${index + 1} de ${total}`}
                                 aria-current={index === current}
                                 className={cn(
-                                    'block w-full overflow-hidden rounded-lg border-2 transition-opacity focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
+                                    'block w-full overflow-hidden rounded-sm border-2 transition-opacity focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
                                     index === current
-                                        ? 'border-primary'
+                                        ? 'border-foreground'
                                         : 'border-transparent opacity-70 hover:opacity-100',
                                 )}
                             >

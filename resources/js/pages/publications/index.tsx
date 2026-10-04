@@ -179,14 +179,19 @@ export default function PublicationsIndex({
             <Head title="Catálogo de objetos" />
 
             <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
-                <header className="mb-6 space-y-4">
-                    <div>
-                        <h1 className="text-3xl font-semibold tracking-tight">
-                            Catálogo
-                        </h1>
-                        <p className="text-muted-foreground">
-                            Encuentra objetos para donar, intercambiar o comprar
-                            entre vecinos.
+                <header className="mb-8 space-y-6">
+                    <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+                        <div className="space-y-2">
+                            <p className="type-label text-muted-foreground">
+                                Mercado de la comunidad · Medellín
+                            </p>
+                            <h1 className="type-display text-4xl sm:text-5xl">
+                                Catálogo
+                            </h1>
+                        </div>
+                        <p className="max-w-sm text-muted-foreground">
+                            Objetos de tus vecinos para donar, intercambiar o
+                            comprar. Filtra por categoría, modalidad y estado.
                         </p>
                     </div>
 
@@ -204,33 +209,33 @@ export default function PublicationsIndex({
                                 type="search"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Buscar por título o descripción…"
+                                placeholder="Bicicleta, escritorio, libros de texto…"
                                 aria-label="Buscar objetos"
-                                className="h-11 pl-9"
+                                className="h-12 bg-card pl-9 text-base"
                                 maxLength={100}
                             />
                         </div>
-                        <Button type="submit" size="lg" className="h-11">
+                        <Button type="submit" size="lg" className="h-12 px-6">
                             Buscar
                         </Button>
                     </form>
                 </header>
 
-                <div className="grid gap-8 lg:grid-cols-[17rem_1fr]">
+                <div className="grid gap-10 lg:grid-cols-[15rem_1fr]">
                     <aside
                         className="hidden lg:block"
                         aria-label="Filtros del catálogo"
                     >
-                        <div className="sticky top-24 rounded-xl border bg-card p-5">
-                            <h2 className="mb-4 font-semibold">Filtros</h2>
+                        <div className="sticky top-24 border-t border-foreground/80 pt-3">
+                            <h2 className="type-label mb-5">Filtrar</h2>
                             {panel('desktop')}
                         </div>
                     </aside>
 
                     <section aria-label="Resultados" className="min-w-0">
-                        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-t border-foreground/80 pt-3">
                             <p
-                                className="text-sm text-muted-foreground"
+                                className="type-label"
                                 role="status"
                                 aria-live="polite"
                             >
@@ -330,9 +335,9 @@ export default function PublicationsIndex({
                                     <li key={chip.key}>
                                         <Button
                                             type="button"
-                                            variant="secondary"
+                                            variant="outline"
                                             size="sm"
-                                            className="h-8 rounded-full"
+                                            className="h-8 rounded-sm bg-card font-normal"
                                             onClick={chip.clear}
                                             aria-label={`Quitar filtro ${chip.label}`}
                                         >
@@ -346,7 +351,7 @@ export default function PublicationsIndex({
 
                         {navigating ? (
                             <div
-                                className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+                                className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3"
                                 aria-busy="true"
                             >
                                 {Array.from({ length: 6 }, (_, i) => (
@@ -375,7 +380,7 @@ export default function PublicationsIndex({
                                 </Button>
                             </EmptyState>
                         ) : (
-                            <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                            <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
                                 {publications.data.map((publication) => (
                                     <li key={publication.id} className="flex">
                                         <div className="w-full">
@@ -389,7 +394,7 @@ export default function PublicationsIndex({
                         )}
 
                         <PaginationNav
-                            className="mt-8"
+                            className="mt-12"
                             currentPage={publications.meta.current_page}
                             lastPage={publications.meta.last_page}
                             href={(page) =>

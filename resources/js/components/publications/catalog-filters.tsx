@@ -1,6 +1,5 @@
 import { RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -9,6 +8,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { activeFilterCount } from '@/lib/catalog';
+import { cn } from '@/lib/utils';
 import type { CatalogFilters, Category, Option } from '@/types';
 
 const ALL = '__all__';
@@ -47,9 +47,14 @@ export default function CatalogFiltersPanel({
     const count = activeFilterCount(filters);
 
     return (
-        <div className="space-y-6">
+        <div className="divide-y divide-border [&>*]:py-5 [&>*:first-child]:pt-0">
             <div className="space-y-2">
-                <Label htmlFor={`${idPrefix}-category`}>Categoría</Label>
+                <label
+                    htmlFor={`${idPrefix}-category`}
+                    className="type-label text-muted-foreground"
+                >
+                    Categoría
+                </label>
                 <Select
                     value={macro?.slug ?? ALL}
                     onValueChange={(value) =>
@@ -79,7 +84,12 @@ export default function CatalogFiltersPanel({
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor={`${idPrefix}-subcategory`}>Subcategoría</Label>
+                <label
+                    htmlFor={`${idPrefix}-subcategory`}
+                    className="type-label text-muted-foreground"
+                >
+                    Subcategoría
+                </label>
                 <Select
                     value={filters.subcategory || ALL}
                     disabled={!macro}
@@ -114,40 +124,63 @@ export default function CatalogFiltersPanel({
                 )}
             </div>
 
-            <fieldset className="space-y-2">
-                <legend className="mb-2 text-sm leading-none font-medium">
-                    Modalidad
-                </legend>
-                {[{ value: '', label: 'Todas' }, ...modalities].map(
-                    (option) => {
-                        const id = `${idPrefix}-modality-${option.value || 'all'}`;
+            <div>
+                <fieldset className="space-y-1">
+                    <legend className="type-label mb-2 block text-muted-foreground">
+                        Modalidad
+                    </legend>
+                    {[{ value: '', label: 'Todas' }, ...modalities].map(
+                        (option) => {
+                            const id = `${idPrefix}-modality-${option.value || 'all'}`;
 
-                        return (
-                            <label
-                                key={option.value}
-                                htmlFor={id}
-                                className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-sm hover:bg-accent has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50"
-                            >
-                                <input
-                                    id={id}
-                                    type="radio"
-                                    name={`${idPrefix}-modality`}
-                                    value={option.value}
-                                    checked={filters.modality === option.value}
-                                    onChange={() =>
-                                        onChange({ modality: option.value })
-                                    }
-                                    className="size-4 accent-[var(--primary)]"
-                                />
-                                {option.label}
-                            </label>
-                        );
-                    },
-                )}
-            </fieldset>
+                            return (
+                                <label
+                                    key={option.value}
+                                    htmlFor={id}
+                                    className="-mx-2 flex cursor-pointer items-center gap-2.5 rounded-sm px-2 py-1.5 text-sm hover:bg-accent has-[:checked]:font-semibold has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50"
+                                >
+                                    <input
+                                        id={id}
+                                        type="radio"
+                                        name={`${idPrefix}-modality`}
+                                        value={option.value}
+                                        checked={
+                                            filters.modality === option.value
+                                        }
+                                        onChange={() =>
+                                            onChange({ modality: option.value })
+                                        }
+                                        className="size-4 accent-[var(--primary)]"
+                                    />
+                                    {option.value && (
+                                        <span
+                                            className={cn(
+                                                'size-2 rounded-full',
+                                                option.value === 'donation' &&
+                                                    'bg-donation',
+                                                option.value === 'exchange' &&
+                                                    'bg-exchange',
+                                                option.value === 'sale' &&
+                                                    'bg-sale',
+                                            )}
+                                            aria-hidden
+                                        />
+                                    )}
+                                    {option.label}
+                                </label>
+                            );
+                        },
+                    )}
+                </fieldset>
+            </div>
 
             <div className="space-y-2">
-                <Label htmlFor={`${idPrefix}-status`}>Estado</Label>
+                <label
+                    htmlFor={`${idPrefix}-status`}
+                    className="type-label text-muted-foreground"
+                >
+                    Estado
+                </label>
                 <Select
                     value={filters.status}
                     onValueChange={(value) => onChange({ status: value })}
@@ -166,16 +199,18 @@ export default function CatalogFiltersPanel({
                 </Select>
             </div>
 
-            <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={onReset}
-                disabled={count === 0}
-            >
-                <RotateCcw aria-hidden />
-                Limpiar filtros
-            </Button>
+            <div>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    className="-mx-3 text-muted-foreground"
+                    onClick={onReset}
+                    disabled={count === 0}
+                >
+                    <RotateCcw aria-hidden />
+                    Limpiar filtros
+                </Button>
+            </div>
         </div>
     );
 }

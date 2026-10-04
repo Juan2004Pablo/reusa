@@ -1,7 +1,7 @@
-import { ImageOff } from 'lucide-react';
+import { Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-/** Imagen de portada con marcador de posición cuando la publicación no tiene fotos. */
+/** Foto de portada; sin foto muestra una etiqueta vacía sobre papel. */
 export default function CoverImage({
     src,
     alt,
@@ -16,7 +16,7 @@ export default function CoverImage({
     return (
         <div
             className={cn(
-                'relative overflow-hidden bg-muted',
+                'relative overflow-hidden bg-paper',
                 className ?? 'aspect-[4/3]',
             )}
         >
@@ -32,10 +32,14 @@ export default function CoverImage({
                 <div
                     role="img"
                     aria-label="Sin fotografía"
-                    className="flex size-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-accent to-muted text-muted-foreground"
+                    className="flex size-full flex-col items-center justify-center gap-2 text-muted-foreground"
                 >
-                    <ImageOff className="size-8" aria-hidden="true" />
-                    <span className="text-xs">Sin fotografía</span>
+                    <Tag
+                        className="size-7 -rotate-12"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                    />
+                    <span className="type-label">Sin foto</span>
                 </div>
             )}
         </div>

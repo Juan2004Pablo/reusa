@@ -1,37 +1,17 @@
 import { Head, Link } from '@inertiajs/react';
-import {
-    CalendarClock,
-    EyeOff,
-    Info,
-    MapPin,
-    Pencil,
-    Repeat,
-    ShieldAlert,
-    Tag,
-    Trash2,
-    Wrench,
-} from 'lucide-react';
+import { EyeOff, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import DeletePublicationDialog from '@/components/publications/delete-publication-dialog';
-import Gallery from '@/components/publications/gallery';
 import ModalityLabel from '@/components/market/modality-label';
 import PriceTag from '@/components/market/price-tag';
 import StatusStamp from '@/components/market/status-stamp';
+import DeletePublicationDialog from '@/components/publications/delete-publication-dialog';
+import Gallery from '@/components/publications/gallery';
 import StatusMenu from '@/components/publications/status-menu';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useInitials } from '@/hooks/use-initials';
 import { formatMonthYear, formatRelative } from '@/lib/format';
+import { neighborhood } from '@/lib/location';
 import { terms } from '@/routes';
 import { edit, index } from '@/routes/publications';
 import type { PublicationDetail } from '@/types';
@@ -51,43 +31,46 @@ export default function PublicationShow({
             <Head title={publication.title} />
 
             <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-                <Breadcrumb className="mb-6">
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink asChild>
-                                <Link href={index()}>Catálogo</Link>
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
+                <nav aria-label="Ruta" className="mb-6">
+                    <ol className="type-label flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground">
+                        <li>
+                            <Link
+                                href={index()}
+                                className="hover:text-foreground hover:underline"
+                            >
+                                Catálogo
+                            </Link>
+                        </li>
                         {category.parent && (
                             <>
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                    <BreadcrumbLink asChild>
-                                        <Link
-                                            href={index({
-                                                query: {
-                                                    category:
-                                                        category.parent.slug,
-                                                },
-                                            })}
-                                        >
-                                            {category.parent.name}
-                                        </Link>
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
+                                <li aria-hidden>/</li>
+                                <li>
+                                    <Link
+                                        href={index({
+                                            query: {
+                                                category: category.parent.slug,
+                                            },
+                                        })}
+                                        className="hover:text-foreground hover:underline"
+                                    >
+                                        {category.parent.name}
+                                    </Link>
+                                </li>
                             </>
                         )}
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>{category.name}</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
+                        <li aria-hidden>/</li>
+                        <li aria-current="page" className="text-foreground">
+                            {category.name}
+                        </li>
+                    </ol>
+                </nav>
 
                 {publication.is_hidden && (
                     <Alert variant="destructive" className="mb-6">
                         <EyeOff />
-                        <AlertTitle>Publicación oculta</AlertTitle>
+                        <AlertTitle className="line-clamp-none">
+                            Publicación oculta
+                        </AlertTitle>
                         <AlertDescription>
                             La administración ocultó esta publicación, por eso
                             no aparece en el catálogo. Solo tú puedes verla.
@@ -95,163 +78,156 @@ export default function PublicationShow({
                     </Alert>
                 )}
 
-                <div className="grid gap-8 lg:grid-cols-[1.25fr_1fr]">
-                    <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+                <div className="grid gap-x-12 gap-y-10 lg:grid-cols-[1.2fr_1fr]">
+                    <div className="relative min-w-0 lg:col-start-1 lg:row-start-1">
                         <Gallery
                             key={publication.id}
                             images={publication.images}
                             title={publication.title}
                         />
+                        {unavailable && (
+                            <StatusStamp
+                                status={publication.status.value}
+                                label={publication.status.label}
+                                tilt
+                                size="lg"
+                                className="pointer-events-none absolute top-5 right-5"
+                            />
+                        )}
                     </div>
 
-                    <div className="space-y-5 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-                        <Card className="gap-4">
-                            <CardHeader className="gap-3">
-                                <div className="flex flex-wrap gap-2">
-                                    <ModalityLabel
-                                        modality={publication.modality.value}
-                                        label={publication.modality.label}
-                                    />
-                                    <StatusStamp
-                                        status={publication.status.value}
-                                        label={publication.status.label}
-                                    />
-                                </div>
-                                <h1 className="text-2xl leading-snug font-semibold tracking-tight text-balance">
-                                    {publication.title}
-                                </h1>
-                                <PriceTag
+                    <div className="flex min-w-0 flex-col gap-7 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+                        <header className="space-y-4">
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                                <ModalityLabel
                                     modality={publication.modality.value}
-                                    price={publication.price}
-                                    className="text-3xl"
+                                    label={publication.modality.label}
                                 />
-                            </CardHeader>
-                            <CardContent className="space-y-5">
-                                {publication.modality.value === 'exchange' &&
-                                    publication.wanted_in_exchange && (
-                                        <div className="text-exchange-foreground flex gap-3 rounded-lg bg-exchange p-3 text-sm">
-                                            <Repeat
-                                                className="mt-0.5 size-4 shrink-0"
-                                                aria-hidden
-                                            />
-                                            <p>
-                                                <strong>Busca a cambio:</strong>{' '}
-                                                {publication.wanted_in_exchange}
-                                            </p>
-                                        </div>
-                                    )}
+                                <span className="type-label text-muted-foreground">
+                                    {publication.status.label}
+                                </span>
+                            </div>
+                            <h1 className="type-display text-3xl sm:text-4xl">
+                                {publication.title}
+                            </h1>
+                            <PriceTag
+                                modality={publication.modality.value}
+                                price={publication.price}
+                                size="lg"
+                            />
+                        </header>
 
-                                <dl className="grid gap-3 text-sm">
-                                    <Fact
-                                        icon={Wrench}
-                                        label="Estado del objeto"
-                                    >
-                                        {publication.condition.label}
-                                    </Fact>
-                                    <Fact icon={Tag} label="Categoría">
-                                        {category.parent
-                                            ? `${category.parent.name} › ${category.name}`
-                                            : category.name}
-                                    </Fact>
-                                    <Fact icon={MapPin} label="Ubicación">
-                                        {publication.location}
-                                    </Fact>
-                                    <Fact
-                                        icon={CalendarClock}
-                                        label="Publicado"
-                                    >
-                                        {formatRelative(publication.created_at)}
-                                    </Fact>
-                                </dl>
-
-                                {unavailable && (
-                                    <Alert>
-                                        <Info />
-                                        <AlertTitle className="line-clamp-none">
-                                            Este objeto ya no está disponible
-                                        </AlertTitle>
-                                        <AlertDescription>
-                                            Estado actual:{' '}
-                                            {publication.status.label.toLowerCase()}
-                                            .
-                                        </AlertDescription>
-                                    </Alert>
-                                )}
-
-                                <Alert className="border-primary/30 bg-accent/60">
-                                    <ShieldAlert />
-                                    <AlertTitle className="line-clamp-none">
-                                        El pago y la entrega se coordinan
-                                        directamente entre las partes
-                                    </AlertTitle>
-                                    <AlertDescription>
-                                        ReUsa es solo un canal de contacto: no
-                                        interviene en la negociación, el pago ni
-                                        la entrega.{' '}
-                                        <Link
-                                            href={terms()}
-                                            className="font-medium text-foreground underline underline-offset-4"
-                                        >
-                                            Leer términos
-                                        </Link>
-                                    </AlertDescription>
-                                </Alert>
-
-                                <div className="space-y-2">
-                                    <Button
-                                        className="w-full"
-                                        size="lg"
-                                        disabled
-                                        aria-describedby="solicitud-ayuda"
-                                    >
-                                        Solicitudes disponibles próximamente
-                                    </Button>
-                                    <p
-                                        id="solicitud-ayuda"
-                                        className="text-center text-xs text-muted-foreground"
-                                    >
-                                        Muy pronto podrás pedir este objeto
-                                        desde ReUsa.
+                        {publication.modality.value === 'exchange' &&
+                            publication.wanted_in_exchange && (
+                                <div className="border-l-4 border-exchange pl-4">
+                                    <p className="type-label text-muted-foreground">
+                                        Busca a cambio
+                                    </p>
+                                    <p className="mt-1 text-lg">
+                                        {publication.wanted_in_exchange}
                                     </p>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            )}
 
-                        <Card className="gap-3">
-                            <CardHeader>
-                                <CardTitle className="text-base">
+                        <section aria-labelledby="ficha">
+                            <h2 id="ficha" className="type-label mb-3">
+                                Ficha del objeto
+                            </h2>
+                            <dl className="space-y-2.5 border-t border-foreground/80 pt-3 text-sm">
+                                <FichaRow label="Estado del objeto">
+                                    {publication.condition.label}
+                                </FichaRow>
+                                <FichaRow label="Categoría">
+                                    {category.name}
+                                </FichaRow>
+                                <FichaRow label="Barrio">
+                                    {neighborhood(publication.location)}
+                                </FichaRow>
+                                <FichaRow label="Punto de entrega">
+                                    {publication.location}
+                                </FichaRow>
+                                <FichaRow label="Publicado">
+                                    {formatRelative(publication.created_at)}
+                                </FichaRow>
+                            </dl>
+                        </section>
+
+                        <aside
+                            aria-label="Pago y entrega"
+                            className="paper-note mt-2 space-y-1.5 px-5 pt-5 pb-4"
+                        >
+                            <p className="font-semibold">
+                                El pago y la entrega se coordinan directamente
+                                entre las partes.
+                            </p>
+                            <p className="text-sm">
+                                ReUsa solo pone en contacto a los vecinos: no
+                                interviene en la negociación, el pago ni la
+                                entrega.{' '}
+                                <Link
+                                    href={terms()}
+                                    className="font-semibold underline underline-offset-4"
+                                >
+                                    Leer términos
+                                </Link>
+                            </p>
+                        </aside>
+
+                        <div className="space-y-2">
+                            <Button
+                                className="h-12 w-full text-base"
+                                disabled
+                                aria-describedby="solicitud-ayuda"
+                            >
+                                Solicitudes disponibles próximamente
+                            </Button>
+                            <p
+                                id="solicitud-ayuda"
+                                className="text-center text-sm text-muted-foreground"
+                            >
+                                Muy pronto podrás pedir este objeto desde ReUsa.
+                            </p>
+                        </div>
+
+                        <section
+                            aria-labelledby="publicante"
+                            className="flex items-center gap-4 border-t pt-5"
+                        >
+                            <span
+                                className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-foreground/80 font-mono text-sm font-semibold"
+                                aria-hidden
+                            >
+                                {getInitials(owner.name)}
+                            </span>
+                            <div className="min-w-0">
+                                <h2
+                                    id="publicante"
+                                    className="type-label text-muted-foreground"
+                                >
                                     Publicado por
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex items-center gap-3">
-                                <Avatar className="size-11">
-                                    <AvatarFallback className="bg-accent font-medium text-accent-foreground">
-                                        {getInitials(owner.name)}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="min-w-0 text-sm">
-                                    <p className="truncate font-medium">
-                                        {owner.name}
-                                    </p>
-                                    <p className="truncate text-muted-foreground">
-                                        {owner.community
-                                            ? `${owner.community} · `
-                                            : ''}
-                                        Miembro desde{' '}
-                                        {formatMonthYear(owner.member_since)}
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </h2>
+                                <p className="truncate font-semibold">
+                                    {owner.name}
+                                </p>
+                                <p className="type-label truncate text-muted-foreground">
+                                    {owner.community
+                                        ? `${owner.community} · `
+                                        : ''}
+                                    Vecino desde{' '}
+                                    {formatMonthYear(owner.member_since)}
+                                </p>
+                            </div>
+                        </section>
 
                         {publication.can.update && (
-                            <Card className="gap-3 border-primary/30">
-                                <CardHeader>
-                                    <CardTitle className="text-base">
-                                        Administrar mi publicación
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="flex flex-wrap gap-2">
+                            <section
+                                aria-labelledby="administrar"
+                                className="space-y-3 rounded-md border border-dashed border-input bg-paper/60 p-4"
+                            >
+                                <h2 id="administrar" className="type-label">
+                                    Tu publicación
+                                </h2>
+                                <div className="flex flex-wrap gap-2">
                                     <Button variant="outline" asChild>
                                         <Link href={edit(publication.slug)}>
                                             <Pencil aria-hidden />
@@ -274,8 +250,8 @@ export default function PublicationShow({
                                             Eliminar
                                         </Button>
                                     )}
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </section>
                         )}
                     </div>
 
@@ -283,13 +259,10 @@ export default function PublicationShow({
                         aria-labelledby="descripcion"
                         className="min-w-0 lg:col-start-1 lg:row-start-2"
                     >
-                        <h2
-                            id="descripcion"
-                            className="mb-3 text-xl font-semibold"
-                        >
+                        <h2 id="descripcion" className="type-label mb-3">
                             Descripción
                         </h2>
-                        <p className="leading-relaxed whitespace-pre-line text-foreground/90">
+                        <p className="max-w-prose border-t border-foreground/80 pt-4 text-lg leading-relaxed whitespace-pre-line">
                             {publication.description}
                         </p>
                     </section>
@@ -306,22 +279,19 @@ export default function PublicationShow({
     );
 }
 
-function Fact({
-    icon: Icon,
+/** Fila de la ficha: «Dato ······ Valor», como una etiqueta impresa. */
+function FichaRow({
     label,
     children,
 }: {
-    icon: typeof Tag;
     label: string;
     children: React.ReactNode;
 }) {
     return (
-        <div>
-            <dt className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Icon className="size-4 shrink-0" aria-hidden />
-                {label}
-            </dt>
-            <dd className="pl-6 text-sm font-medium">{children}</dd>
+        <div className="label-row">
+            <dt className="text-muted-foreground">{label}</dt>
+            <span className="leader" aria-hidden />
+            <dd className="font-medium">{children}</dd>
         </div>
     );
 }
