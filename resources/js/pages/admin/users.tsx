@@ -134,7 +134,7 @@ export default function AdminUsers({ users: list, filters, roles }: Props) {
                         description="Prueba con otro nombre o correo."
                     />
                 ) : (
-                    <ul className="divide-y overflow-hidden rounded-xl border bg-card">
+                    <ul className="divide-y border-y">
                         {list.data.map((user) => (
                             <li
                                 key={user.id}

@@ -207,7 +207,7 @@ export default function AdminPublications({
                         description="Cambia la búsqueda o los filtros para ver más resultados."
                     />
                 ) : (
-                    <ul className="divide-y overflow-hidden rounded-xl border bg-card">
+                    <ul className="divide-y border-y">
                         {list.data.map((publication) => (
                             <li
                                 key={publication.id}
@@ -237,10 +237,19 @@ export default function AdminPublications({
                                             }
                                             label={publication.modality.label}
                                         />
-                                        <StatusStamp
-                                            status={publication.status.value}
-                                            label={publication.status.label}
-                                        />
+                                        {publication.status.value ===
+                                        'available' ? (
+                                            <span className="type-label text-muted-foreground">
+                                                {publication.status.label}
+                                            </span>
+                                        ) : (
+                                            <StatusStamp
+                                                status={
+                                                    publication.status.value
+                                                }
+                                                label={publication.status.label}
+                                            />
+                                        )}
                                         {publication.is_hidden && (
                                             <Badge variant="destructive">
                                                 <EyeOff aria-hidden />
