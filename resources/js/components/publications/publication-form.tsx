@@ -5,15 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import InputError from '@/components/input-error';
 import ImageUploader from '@/components/publications/image-uploader';
 import type { ImageItem } from '@/components/publications/image-uploader';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import SectionHeading from '@/components/market/section-heading';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -163,39 +156,37 @@ export default function PublicationForm({
         <form
             onSubmit={submit}
             noValidate
-            className="space-y-6"
+            className="space-y-12"
             encType="multipart/form-data"
         >
-            <Alert
-                variant="destructive"
-                className="border-amber-300 bg-amber-50 text-amber-900 *:data-[slot=alert-description]:text-amber-900/90 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-200 dark:*:data-[slot=alert-description]:text-amber-200/90"
+            <aside
+                aria-label="Productos no admitidos"
+                className="flex gap-3 rounded-md border-2 border-dashed border-note-ink/40 bg-note px-4 py-3 text-note-ink"
             >
-                <TriangleAlert />
-                <AlertTitle>Productos no admitidos</AlertTitle>
-                <AlertDescription>
-                    <p>
-                        No publiques {prohibited.join(', ')}. La administración
-                        puede retirar las publicaciones que incumplan las
-                        reglas.{' '}
-                        <Link
-                            href={terms()}
-                            className="font-medium underline underline-offset-4"
-                        >
-                            Ver términos y condiciones
-                        </Link>
-                    </p>
-                </AlertDescription>
-            </Alert>
+                <TriangleAlert className="mt-0.5 size-5 shrink-0" aria-hidden />
+                <p className="text-sm">
+                    <strong className="font-semibold">
+                        Productos no admitidos:
+                    </strong>{' '}
+                    {prohibited.join(', ')}. La administración puede retirar las
+                    publicaciones que incumplan las reglas.{' '}
+                    <Link
+                        href={terms()}
+                        className="font-semibold underline underline-offset-4"
+                    >
+                        Ver términos y condiciones
+                    </Link>
+                </p>
+            </aside>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Información básica</CardTitle>
-                    <CardDescription>
-                        Un buen título y una descripción clara ayudan a que tu
-                        objeto encuentre un nuevo hogar.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-5">
+            <section aria-labelledby="sec-1">
+                <SectionHeading
+                    id="sec-1"
+                    index="1"
+                    title="Información básica"
+                    description="Un buen título y una descripción clara ayudan a que tu objeto encuentre un nuevo hogar."
+                />
+                <div className="grid gap-5 pt-6">
                     <div className="grid gap-2">
                         <Label htmlFor="title">Título</Label>
                         <Input
@@ -312,17 +303,17 @@ export default function PublicationForm({
                             message={errors.category_id}
                         />
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Modalidad</CardTitle>
-                    <CardDescription>
-                        ¿Qué quieres hacer con el objeto?
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-5">
+            <section aria-labelledby="sec-2">
+                <SectionHeading
+                    id="sec-2"
+                    index="2"
+                    title="Modalidad"
+                    description="¿Qué quieres hacer con el objeto?"
+                />
+                <div className="grid gap-5 pt-6">
                     <fieldset
                         className="grid gap-3 sm:grid-cols-3"
                         disabled={publication?.is_closed}
@@ -336,9 +327,9 @@ export default function PublicationForm({
                                 <label
                                     key={option.value}
                                     className={cn(
-                                        'flex cursor-pointer flex-col gap-1 rounded-xl border p-4 transition-colors has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50',
+                                        'flex cursor-pointer flex-col gap-1 rounded-md border-2 p-4 transition-colors has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50',
                                         checked
-                                            ? 'border-primary bg-accent'
+                                            ? 'border-foreground bg-card'
                                             : 'hover:bg-accent/50',
                                         publication?.is_closed &&
                                             'cursor-not-allowed opacity-60',
@@ -451,14 +442,16 @@ export default function PublicationForm({
                             />
                         </div>
                     )}
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Estado y ubicación</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-5 sm:grid-cols-2">
+            <section aria-labelledby="sec-3">
+                <SectionHeading
+                    id="sec-3"
+                    index="3"
+                    title="Estado y ubicación"
+                />
+                <div className="grid gap-5 pt-6 sm:grid-cols-2">
                     <div className="grid gap-2">
                         <Label htmlFor="condition">Estado del objeto</Label>
                         <Select
@@ -513,25 +506,24 @@ export default function PublicationForm({
                             message={errors.location}
                         />
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Fotografías</CardTitle>
-                    <CardDescription>
-                        Agrega de 1 a 4 fotos. La primera será la portada;
-                        puedes cambiar el orden con las flechas.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+            <section aria-labelledby="sec-4">
+                <SectionHeading
+                    id="sec-4"
+                    index="4"
+                    title="Fotografías"
+                    description="Agrega de 1 a 4 fotos. La primera será la portada; puedes cambiar el orden con las flechas."
+                />
+                <div className="pt-6">
                     <ImageUploader
                         items={items}
                         onChange={setItems}
                         errors={imageErrors}
                     />
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
             <div className="sticky bottom-0 -mx-4 flex flex-col-reverse gap-2 border-t bg-background/95 px-4 py-4 backdrop-blur sm:static sm:mx-0 sm:flex-row sm:justify-end sm:border-0 sm:bg-transparent sm:p-0">
                 <Button variant="outline" asChild>

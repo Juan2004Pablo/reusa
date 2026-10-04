@@ -13,6 +13,7 @@ export default function SectionHeading({
     index,
     action,
     as: Tag = 'h2',
+    size = 'lg',
     className,
 }: {
     id?: string;
@@ -22,6 +23,7 @@ export default function SectionHeading({
     index?: string;
     action?: ReactNode;
     as?: 'h1' | 'h2' | 'h3';
+    size?: 'lg' | 'sm';
     className?: string;
 }) {
     return (
@@ -40,7 +42,15 @@ export default function SectionHeading({
                         {label}
                     </p>
                 )}
-                <Tag id={id} className="type-display text-2xl sm:text-3xl">
+                <Tag
+                    id={id}
+                    className={cn(
+                        'type-display',
+                        size === 'lg'
+                            ? 'text-2xl sm:text-3xl'
+                            : 'text-xl sm:text-2xl',
+                    )}
+                >
                     {title}
                 </Tag>
                 {description && (

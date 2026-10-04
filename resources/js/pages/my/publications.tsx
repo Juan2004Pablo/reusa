@@ -67,18 +67,18 @@ export default function MyPublications({ publications, counts }: Props) {
                     </Button>
                 </div>
 
-                <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <dl className="grid grid-cols-2 divide-x divide-y border-y sm:grid-cols-4 sm:divide-y-0">
                     {summary.map((item) => (
                         <div
                             key={item.key}
-                            className="rounded-xl border bg-card p-4"
+                            className="space-y-1 px-4 py-4 first:pl-0"
                         >
-                            <dt className="text-sm text-muted-foreground">
-                                {item.label}
-                            </dt>
-                            <dd className="text-2xl font-semibold tabular-nums">
+                            <dd className="font-mono text-3xl font-semibold tabular-nums">
                                 {counts[item.key]}
                             </dd>
+                            <dt className="type-label text-muted-foreground">
+                                {item.label}
+                            </dt>
                         </div>
                     ))}
                 </dl>
@@ -97,7 +97,7 @@ export default function MyPublications({ publications, counts }: Props) {
                         </Button>
                     </EmptyState>
                 ) : (
-                    <ul className="divide-y overflow-hidden rounded-xl border bg-card">
+                    <ul className="divide-y border-y">
                         {publications.data.map((publication) => (
                             <li
                                 key={publication.id}
@@ -112,7 +112,7 @@ export default function MyPublications({ publications, counts }: Props) {
                                     <CoverImage
                                         src={publication.cover_url}
                                         alt=""
-                                        className="size-16 rounded-lg sm:size-20"
+                                        className="size-16 rounded-md sm:size-20"
                                     />
                                 </Link>
 
@@ -130,10 +130,19 @@ export default function MyPublications({ publications, counts }: Props) {
                                             }
                                             label={publication.modality.label}
                                         />
-                                        <StatusStamp
-                                            status={publication.status.value}
-                                            label={publication.status.label}
-                                        />
+                                        {publication.status.value ===
+                                        'available' ? (
+                                            <span className="type-label text-muted-foreground">
+                                                {publication.status.label}
+                                            </span>
+                                        ) : (
+                                            <StatusStamp
+                                                status={
+                                                    publication.status.value
+                                                }
+                                                label={publication.status.label}
+                                            />
+                                        )}
                                         {publication.is_hidden && (
                                             <Badge variant="destructive">
                                                 <EyeOff aria-hidden />
