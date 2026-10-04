@@ -39,7 +39,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                 Saltar al contenido
             </a>
 
-            <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+            <header className="sticky top-0 z-40 border-b border-foreground/15 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-4 sm:px-6">
                     <Brand />
 
@@ -173,23 +173,52 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                 {children}
             </main>
 
-            <footer className="border-t bg-muted/40">
-                <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-muted-foreground sm:px-6 md:flex-row md:items-center md:justify-between">
-                    <div className="space-y-1">
+            <footer className="border-t bg-paper">
+                <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
+                    <div className="space-y-3">
                         <Brand />
-                        <p>
+                        <p className="max-w-xs text-sm text-muted-foreground">
                             Economía circular entre vecinos: dona, intercambia o
                             vende lo que ya no usas.
                         </p>
                     </div>
-                    <div className="space-y-1 md:text-right">
-                        <p>
-                            <Link
-                                href={terms()}
-                                className="font-medium text-foreground underline underline-offset-4"
-                            >
-                                Términos y condiciones
-                            </Link>
+                    <nav
+                        aria-label="Pie de página"
+                        className="space-y-2 text-sm"
+                    >
+                        <p className="type-label text-muted-foreground">
+                            Explorar
+                        </p>
+                        <ul className="space-y-1.5">
+                            <li>
+                                <Link
+                                    href={catalog()}
+                                    className="hover:underline"
+                                >
+                                    Catálogo
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href={create()}
+                                    className="hover:underline"
+                                >
+                                    Publicar un objeto
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href={terms()}
+                                    className="hover:underline"
+                                >
+                                    Términos y condiciones
+                                </Link>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div className="space-y-2 text-sm">
+                        <p className="type-label text-muted-foreground">
+                            Proyecto
                         </p>
                         <p>
                             Proyecto Integrador · Politécnico Colombiano Jaime

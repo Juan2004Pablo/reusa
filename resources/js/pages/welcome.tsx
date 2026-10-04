@@ -1,171 +1,215 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import {
-    ArrowRight,
-    Camera,
-    Gift,
-    HandCoins,
-    Handshake,
-    Leaf,
-    Repeat,
-    Search,
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { ArrowRight, Search } from 'lucide-react';
+import { useState } from 'react';
+import ModalityLabel from '@/components/market/modality-label';
+import PriceTag from '@/components/market/price-tag';
+import SectionHeading from '@/components/market/section-heading';
 import CategoryIcon from '@/components/publications/category-icon';
+import CoverImage from '@/components/publications/cover-image';
 import PublicationCard from '@/components/publications/publication-card';
 import { Button } from '@/components/ui/button';
-import { pluralize } from '@/lib/format';
+import { formatInteger } from '@/lib/format';
+import { neighborhood } from '@/lib/location';
 import { cn } from '@/lib/utils';
 import { register } from '@/routes';
-import { create, index } from '@/routes/publications';
+import { create, index, show } from '@/routes/publications';
 import type { Category, PublicationCard as PublicationCardType } from '@/types';
 
 type Props = {
     latest: PublicationCardType[];
-    categories: Category[];
+    categories: (Category & { available_count: number })[];
     availableCount: number;
+    stats: { available: number; rehomed: number; neighbors: number };
 };
 
-const steps: { icon: LucideIcon; title: string; text: string }[] = [
+const steps = [
     {
-        icon: Camera,
-        title: 'Publica lo que ya no usas',
+        title: 'Publica',
         text: 'Sube hasta 4 fotos, describe el objeto y elige si lo donas, lo intercambias o lo vendes.',
     },
     {
-        icon: Search,
-        title: 'Encuentra lo que necesitas',
+        title: 'Encuentra',
         text: 'Explora el catálogo de tu comunidad y filtra por categoría, modalidad y estado.',
     },
     {
-        icon: Handshake,
-        title: 'Coordina con tu vecino',
-        text: 'El pago y la entrega se acuerdan directamente entre las partes. ReUsa solo facilita el contacto.',
+        title: 'Acuerda',
+        text: 'El pago y la entrega los coordinan las dos personas. ReUsa solo facilita el contacto.',
     },
 ];
 
-const modalities: {
-    value: string;
-    icon: LucideIcon;
-    title: string;
-    text: string;
-    tone: string;
-}[] = [
-    {
-        value: 'donation',
-        icon: Gift,
-        title: 'Donar',
-        text: 'Regala lo que otra persona sí va a aprovechar.',
-        tone: 'bg-donation text-donation-foreground',
-    },
-    {
-        value: 'exchange',
-        icon: Repeat,
-        title: 'Intercambiar',
-        text: 'Cambia lo tuyo por algo que realmente necesitas.',
-        tone: 'bg-exchange text-exchange-foreground',
-    },
-    {
-        value: 'sale',
-        icon: HandCoins,
-        title: 'Vender',
-        text: 'Pon un precio justo en pesos y recupera algo de valor.',
-        tone: 'bg-sale text-sale-foreground',
-    },
+const modalities = [
+    { value: 'donation', label: 'Donar', dot: 'bg-donation' },
+    { value: 'exchange', label: 'Intercambiar', dot: 'bg-exchange' },
+    { value: 'sale', label: 'Vender', dot: 'bg-sale' },
 ];
 
-export default function Welcome({ latest, categories, availableCount }: Props) {
+const tilts = ['-rotate-[1.4deg]', 'rotate-[1.1deg]', '-rotate-[0.6deg]'];
+
+export default function Welcome({ latest, categories, stats }: Props) {
     const { auth } = usePage().props;
+    const [query, setQuery] = useState('');
+    const table = latest.slice(0, 3);
+
+    const search = (event: React.FormEvent) => {
+        event.preventDefault();
+        router.get(index.url(), query.trim() ? { q: query.trim() } : {});
+    };
 
     return (
         <>
             <Head title="Dona, intercambia y vende lo que ya no usas" />
 
-            {/* Hero */}
-            <section className="relative overflow-hidden border-b bg-gradient-to-b from-accent/70 to-background">
-                <div
-                    aria-hidden
-                    className="pointer-events-none absolute -top-24 -right-24 size-96 rounded-full bg-primary/10 blur-3xl"
-                />
-                <div className="relative mx-auto grid w-full max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[1.2fr_1fr]">
-                    <div className="space-y-6">
-                        <span className="inline-flex items-center gap-2 rounded-full border bg-background/80 px-3 py-1 text-sm text-muted-foreground">
-                            <Leaf className="size-4 text-primary" aria-hidden />
-                            Economía circular para tu comunidad en Medellín
-                        </span>
-                        <h1 className="text-4xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-                            Dale una segunda vida a lo que{' '}
-                            <span className="text-primary">ya no usas</span>
+            {/* Portada */}
+            <section className="border-b">
+                <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[1.15fr_1fr] lg:items-center">
+                    <div className="space-y-7">
+                        <p className="type-label text-muted-foreground">
+                            Economía circular entre vecinos · Medellín
+                        </p>
+                        <h1 className="type-display text-[2.6rem] sm:text-6xl">
+                            Lo que ya no usas, le sirve a un vecino.
                         </h1>
                         <p className="max-w-xl text-lg text-muted-foreground">
-                            ReUsa conecta a vecinos para donar, intercambiar o
-                            vender objetos en desuso. Menos residuos, más
-                            comunidad.
+                            Dona, intercambia o vende objetos en buen estado
+                            dentro de tu comunidad. Menos residuos, más
+                            vecindario.
                         </p>
-                        <div className="flex flex-wrap gap-3">
-                            <Button size="lg" asChild>
-                                <Link href={index()}>
-                                    Explorar el catálogo
-                                    <ArrowRight aria-hidden />
-                                </Link>
-                            </Button>
-                            <Button size="lg" variant="outline" asChild>
-                                <Link href={auth.user ? create() : register()}>
-                                    {auth.user
-                                        ? 'Publicar un objeto'
-                                        : 'Crear cuenta gratis'}
-                                </Link>
-                            </Button>
-                        </div>
-                        {availableCount > 0 && (
-                            <p className="text-sm text-muted-foreground">
-                                <strong className="text-foreground">
-                                    {pluralize(
-                                        availableCount,
-                                        'objeto disponible',
-                                        'objetos disponibles',
-                                    )}
-                                </strong>{' '}
-                                esperan un nuevo hogar.
-                            </p>
-                        )}
-                    </div>
 
-                    <ul
-                        className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1"
-                        aria-label="Modalidades"
-                    >
-                        {modalities.map((item) => (
-                            <li key={item.value}>
-                                <Link
-                                    href={index({
-                                        query: { modality: item.value },
-                                    })}
-                                    className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-xs transition-shadow hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-                                >
-                                    <span
-                                        className={cn(
-                                            'flex size-11 shrink-0 items-center justify-center rounded-lg',
-                                            item.tone,
-                                        )}
+                        <form
+                            role="search"
+                            onSubmit={search}
+                            className="flex max-w-xl gap-2"
+                        >
+                            <div className="relative flex-1">
+                                <Search
+                                    className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground"
+                                    aria-hidden
+                                />
+                                <input
+                                    id="home-search"
+                                    type="search"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    placeholder="¿Qué estás buscando?"
+                                    aria-label="Buscar objetos"
+                                    maxLength={100}
+                                    className="h-12 w-full rounded-md border border-input bg-card pr-3 pl-10 text-base outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                />
+                            </div>
+                            <Button
+                                type="submit"
+                                size="lg"
+                                className="h-12 px-6"
+                            >
+                                Buscar
+                            </Button>
+                        </form>
+
+                        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+                            {modalities.map((item) => (
+                                <li key={item.value}>
+                                    <Link
+                                        href={index({
+                                            query: { modality: item.value },
+                                        })}
+                                        className="type-label inline-flex items-center gap-2 underline-offset-4 hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
                                     >
-                                        <item.icon
-                                            className="size-5"
+                                        <span
+                                            className={cn(
+                                                'size-2 rounded-full',
+                                                item.dot,
+                                            )}
                                             aria-hidden
                                         />
-                                    </span>
-                                    <span>
-                                        <span className="block font-semibold">
-                                            {item.title}
-                                        </span>
-                                        <span className="block text-sm text-muted-foreground">
-                                            {item.text}
-                                        </span>
-                                    </span>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
+                                        {item.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {table.length > 0 && (
+                        <div className="relative">
+                            <p className="type-label mb-4 text-muted-foreground">
+                                En la mesa hoy
+                            </p>
+                            <ul className="space-y-4">
+                                {table.map((item, i) => (
+                                    <li
+                                        key={item.id}
+                                        className={cn(
+                                            'transition-transform hover:rotate-0 motion-reduce:transform-none lg:ml-[calc(var(--shift)*1rem)]',
+                                            tilts[i],
+                                        )}
+                                        style={
+                                            {
+                                                '--shift': i % 2,
+                                            } as React.CSSProperties
+                                        }
+                                    >
+                                        <Link
+                                            href={show(item.slug)}
+                                            className="group flex items-center gap-4 rounded-md border bg-card p-3 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+                                        >
+                                            <CoverImage
+                                                src={item.cover_url}
+                                                alt=""
+                                                className="size-20 shrink-0 rounded-sm"
+                                            />
+                                            <span className="min-w-0 flex-1 space-y-1.5">
+                                                <ModalityLabel
+                                                    modality={
+                                                        item.modality.value
+                                                    }
+                                                    label={item.modality.label}
+                                                />
+                                                <span className="block truncate font-semibold group-hover:underline">
+                                                    {item.title}
+                                                </span>
+                                                <span className="type-label block text-muted-foreground">
+                                                    {neighborhood(
+                                                        item.location,
+                                                    )}
+                                                </span>
+                                            </span>
+                                            <PriceTag
+                                                modality={item.modality.value}
+                                                price={item.price}
+                                                className="shrink-0 [--tag-hole:var(--card)]"
+                                            />
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
+            </section>
+
+            {/* Cifras reales */}
+            <section
+                aria-label="La comunidad en cifras"
+                className="border-b bg-paper"
+            >
+                <dl className="mx-auto grid w-full max-w-7xl grid-cols-3 divide-x px-4 sm:px-6">
+                    {[
+                        ['Objetos disponibles', stats.available],
+                        ['Ya encontraron hogar', stats.rehomed],
+                        ['Vecinos en la comunidad', stats.neighbors],
+                    ].map(([label, value]) => (
+                        <div
+                            key={label}
+                            className="space-y-1 px-3 py-6 first:pl-0 sm:px-8 sm:first:pl-0"
+                        >
+                            <dd className="font-mono text-3xl font-semibold tabular-nums sm:text-5xl">
+                                {formatInteger(value as number)}
+                            </dd>
+                            <dt className="type-label text-muted-foreground">
+                                {label}
+                            </dt>
+                        </div>
+                    ))}
+                </dl>
             </section>
 
             {/* Cómo funciona */}
@@ -173,33 +217,24 @@ export default function Welcome({ latest, categories, availableCount }: Props) {
                 aria-labelledby="como-funciona"
                 className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6"
             >
-                <div className="mb-10 max-w-2xl space-y-2">
-                    <h2
-                        id="como-funciona"
-                        className="text-3xl font-semibold tracking-tight"
-                    >
-                        Cómo funciona
-                    </h2>
-                    <p className="text-muted-foreground">
-                        Tres pasos sencillos para dar y recibir.
-                    </p>
-                </div>
-                <ol className="grid gap-6 md:grid-cols-3">
-                    {steps.map((step, index) => (
+                <SectionHeading
+                    id="como-funciona"
+                    label="Tres pasos"
+                    title="Cómo funciona"
+                />
+                <ol className="grid divide-y md:grid-cols-3 md:divide-x md:divide-y-0">
+                    {steps.map((step, i) => (
                         <li
                             key={step.title}
-                            className="relative rounded-xl border bg-card p-6"
+                            className="space-y-3 py-7 md:px-8 md:first:pl-0 md:last:pr-0"
                         >
-                            <span className="absolute top-4 right-5 text-5xl font-semibold text-muted/80 select-none">
-                                {index + 1}
+                            <span className="font-mono text-sm font-semibold text-primary">
+                                {String(i + 1).padStart(2, '0')}
                             </span>
-                            <span className="mb-4 flex size-12 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-                                <step.icon className="size-6" aria-hidden />
-                            </span>
-                            <h3 className="mb-1 text-lg font-semibold">
+                            <h3 className="type-display text-2xl">
                                 {step.title}
                             </h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="max-w-sm text-muted-foreground">
                                 {step.text}
                             </p>
                         </li>
@@ -207,90 +242,90 @@ export default function Welcome({ latest, categories, availableCount }: Props) {
                 </ol>
             </section>
 
-            {/* Categorías */}
+            {/* Estantería de categorías */}
             <section
                 aria-labelledby="categorias"
-                className="border-y bg-muted/40"
+                className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6"
             >
-                <div className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6">
-                    <h2
-                        id="categorias"
-                        className="mb-6 text-2xl font-semibold tracking-tight"
-                    >
-                        Explora por categoría
-                    </h2>
-                    <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                        {categories.map((category) => (
-                            <li key={category.id}>
-                                <Link
-                                    href={index({
-                                        query: { category: category.slug },
-                                    })}
-                                    className="flex h-full flex-col items-center gap-2 rounded-xl border bg-card p-4 text-center text-sm font-medium transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-                                >
-                                    <CategoryIcon
-                                        name={category.icon}
-                                        className="size-6 text-primary"
-                                    />
+                <SectionHeading
+                    id="categorias"
+                    label="Estantería"
+                    title="Qué hay por categoría"
+                />
+                <ul className="grid divide-y sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4">
+                    {categories.map((category) => (
+                        <li key={category.id}>
+                            <Link
+                                href={index({
+                                    query: { category: category.slug },
+                                })}
+                                className="group flex items-center gap-4 py-4 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+                            >
+                                <CategoryIcon
+                                    name={category.icon}
+                                    className="size-6 shrink-0 text-primary"
+                                />
+                                <span className="min-w-0 flex-1 leading-snug font-medium group-hover:underline">
                                     {category.name}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                                </span>
+                                <span className="type-label shrink-0 text-muted-foreground tabular-nums">
+                                    {category.available_count}
+                                </span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
             </section>
 
             {/* Últimas publicaciones */}
             <section
                 aria-labelledby="ultimas"
-                className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6"
+                className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6"
             >
-                <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-                    <h2
-                        id="ultimas"
-                        className="text-3xl font-semibold tracking-tight"
-                    >
-                        Últimas publicaciones
-                    </h2>
-                    <Button variant="ghost" asChild>
-                        <Link href={index()}>
-                            Ver todo el catálogo
-                            <ArrowRight aria-hidden />
-                        </Link>
-                    </Button>
+                <SectionHeading
+                    id="ultimas"
+                    label="Recién llegados"
+                    title="Últimas publicaciones"
+                    action={
+                        <Button variant="ghost" asChild>
+                            <Link href={index()}>
+                                Ver todo el catálogo
+                                <ArrowRight aria-hidden />
+                            </Link>
+                        </Button>
+                    }
+                />
+                <div className="pt-8">
+                    {latest.length > 0 ? (
+                        <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+                            {latest.map((publication) => (
+                                <li key={publication.id}>
+                                    <PublicationCard
+                                        publication={publication}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="rounded-md border border-dashed p-10 text-muted-foreground">
+                            Aún no hay objetos publicados. Puedes ser la primera
+                            persona en compartir algo.
+                        </p>
+                    )}
                 </div>
-
-                {latest.length > 0 ? (
-                    <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                        {latest.map((publication) => (
-                            <li key={publication.id}>
-                                <PublicationCard publication={publication} />
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p className="rounded-xl border border-dashed p-10 text-center text-muted-foreground">
-                        Aún no hay objetos publicados. ¡Sé la primera persona en
-                        compartir algo!
-                    </p>
-                )}
             </section>
 
-            {/* Llamado final */}
-            <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6">
-                <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-primary px-8 py-10 text-primary-foreground md:flex-row md:items-center">
-                    <div className="space-y-1">
-                        <h2 className="text-2xl font-semibold">
-                            ¿Tienes algo que ya no usas?
-                        </h2>
-                        <p className="text-primary-foreground/85">
-                            Publícalo en minutos y ayuda a que siga útil en tu
-                            comunidad.
-                        </p>
-                    </div>
+            {/* Cierre */}
+            <section className="border-t bg-primary text-primary-foreground">
+                <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-6 px-4 py-12 sm:px-6">
+                    <p className="type-display max-w-2xl text-3xl sm:text-4xl">
+                        ¿Tienes algo guardado que ya no usas?
+                    </p>
                     <Button size="lg" variant="secondary" asChild>
                         <Link href={auth.user ? create() : register()}>
-                            {auth.user ? 'Publicar un objeto' : 'Empezar ahora'}
+                            {auth.user
+                                ? 'Publicar un objeto'
+                                : 'Crear cuenta y publicar'}
                             <ArrowRight aria-hidden />
                         </Link>
                     </Button>
