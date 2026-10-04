@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 
 export const MAX_IMAGES = 4;
 export const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+/** PHP rechaza peticiones mayores a `post_max_size` (8 MB por defecto): se deja margen. */
+export const MAX_TOTAL_BYTES = 7.5 * 1024 * 1024;
 export const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export type ImageItem =
@@ -35,6 +37,10 @@ export default function ImageUploader({ items, onChange, errors = [] }: Props) {
 
         const problems: string[] = [];
         const accepted: ImageItem[] = [];
+        let totalBytes = items.reduce(
+            (sum, item) => sum + (item.kind === 'new' ? item.file.size : 0),
+            0,
+        );
 
         Array.from(list).forEach((file) => {
             if (!ACCEPTED_TYPES.includes(file.type)) {
@@ -43,11 +49,16 @@ export default function ImageUploader({ items, onChange, errors = [] }: Props) {
                 );
             } else if (file.size > MAX_IMAGE_BYTES) {
                 problems.push(`«${file.name}»: supera el máximo de 2 MB.`);
+            } else if (totalBytes + file.size > MAX_TOTAL_BYTES) {
+                problems.push(
+                    `«${file.name}»: el total de las fotografías nuevas no puede superar 7,5 MB.`,
+                );
             } else if (accepted.length >= remaining) {
                 problems.push(
                     `«${file.name}»: ya alcanzaste el máximo de ${MAX_IMAGES} fotografías.`,
                 );
             } else {
+                totalBytes += file.size;
                 accepted.push({
                     key: crypto.randomUUID(),
                     kind: 'new',

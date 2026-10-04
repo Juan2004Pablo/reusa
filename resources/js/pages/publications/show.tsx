@@ -316,15 +316,12 @@ function Fact({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex items-start gap-3">
-            <Icon
-                className="mt-0.5 size-4 shrink-0 text-muted-foreground"
-                aria-hidden
-            />
-            <div>
-                <dt className="text-xs text-muted-foreground">{label}</dt>
-                <dd className="font-medium">{children}</dd>
-            </div>
+        <div>
+            <dt className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Icon className="size-4 shrink-0" aria-hidden />
+                {label}
+            </dt>
+            <dd className="pl-6 text-sm font-medium">{children}</dd>
         </div>
     );
 }

@@ -46,7 +46,7 @@ export default function AdminDashboard({ stats }: Props) {
                 />
                 <AdminNav />
 
-                <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     <StatCard
                         icon={Users}
                         label="Usuarios"
@@ -85,7 +85,7 @@ export default function AdminDashboard({ stats }: Props) {
                             query: { visibility: 'hidden' },
                         })}
                     />
-                </dl>
+                </ul>
 
                 <div className="mt-6 grid gap-6 md:grid-cols-2">
                     <BreakdownCard
@@ -124,19 +124,25 @@ function StatCard({
     href: ReturnType<typeof usersIndex>;
 }) {
     return (
-        <Link
-            href={href}
-            className="rounded-xl border bg-card p-4 transition-shadow hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-        >
-            <div className="mb-3 flex items-center justify-between">
-                <dt className="text-sm text-muted-foreground">{label}</dt>
-                <Icon className="size-4 text-primary" aria-hidden />
-            </div>
-            <dd className="text-3xl font-semibold tabular-nums">
-                {formatInteger(value)}
-            </dd>
-            <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
-        </Link>
+        <li>
+            <Link
+                href={href}
+                className="block rounded-xl border bg-card p-4 transition-shadow hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+            >
+                <span className="mb-3 flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                        {label}
+                    </span>
+                    <Icon className="size-4 text-primary" aria-hidden />
+                </span>
+                <span className="block text-3xl font-semibold tabular-nums">
+                    {formatInteger(value)}
+                </span>
+                <span className="mt-1 block text-xs text-muted-foreground">
+                    {hint}
+                </span>
+            </Link>
+        </li>
     );
 }
 
