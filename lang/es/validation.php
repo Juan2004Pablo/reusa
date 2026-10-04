@@ -163,6 +163,36 @@ return [
         'terms' => [
             'accepted' => 'Debes aceptar los términos y condiciones para crear tu cuenta.',
         ],
+        'image_order.*' => [
+            'distinct' => 'Las fotografías enviadas no son válidas.',
+            'regex' => 'Las fotografías enviadas no son válidas.',
+        ],
+        'image_order' => [
+            'required' => 'Agrega al menos una fotografía.',
+            'min' => 'Agrega al menos una fotografía.',
+            'max' => 'Puedes subir máximo 4 fotografías.',
+            'array' => 'Las fotografías enviadas no son válidas.',
+        ],
+        'images' => [
+            'max' => 'Puedes subir máximo 4 fotografías.',
+        ],
+        'images.*' => [
+            'file' => 'La fotografía no es válida o pesa más de 2 MB.',
+            'mimes' => 'Las fotografías deben ser JPG, PNG o WEBP.',
+            'mimetypes' => 'Las fotografías deben ser JPG, PNG o WEBP.',
+            'max' => 'Cada fotografía debe pesar máximo 2 MB.',
+            'uploaded' => 'No se pudo subir una fotografía. Verifica que pese máximo 2 MB.',
+        ],
+        'price' => [
+            'required' => 'Indica el precio de venta en pesos colombianos.',
+            'min' => 'El precio debe ser mayor a cero.',
+        ],
+        'modality' => [
+            'in' => 'No puedes cambiar la modalidad de una publicación ya cerrada.',
+        ],
+        'status' => [
+            'invalid_transition' => 'Ese cambio de estado no está permitido.',
+        ],
     ],
 
     'attributes' => [

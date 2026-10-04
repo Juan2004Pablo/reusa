@@ -41,7 +41,8 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/').'/storage',
+            // Ruta relativa: las imágenes cargan sin importar el host o puerto con el que se abra la app.
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
