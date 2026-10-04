@@ -156,7 +156,6 @@ export default function MyPublications({ publications, counts }: Props) {
                                                 publication.modality.value
                                             }
                                             price={publication.price}
-                                            className="text-sm text-foreground"
                                         />
                                         <span>
                                             {formatRelative(

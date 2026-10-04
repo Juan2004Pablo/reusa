@@ -60,11 +60,27 @@ const items = [
 ];
 
 async function iconNodes(name) {
-    const mod = await import(pathToFileURL(join(root, 'node_modules', 'lucide-react', 'dist', 'esm', 'icons', `${name}.js`)).href);
-    return mod.__iconNode.map(([tag, attrs]) => {
-        const { key, ...rest } = attrs;
-        return `<${tag} ${Object.entries(rest).map(([k, v]) => `${k}="${v}"`).join(' ')}/>`;
-    }).join('');
+    const mod = await import(
+        pathToFileURL(
+            join(
+                root,
+                'node_modules',
+                'lucide-react',
+                'dist',
+                'esm',
+                'icons',
+                `${name}.js`,
+            ),
+        ).href
+    );
+    return mod.__iconNode
+        .map(([tag, attrs]) => {
+            const { key, ...rest } = attrs;
+            return `<${tag} ${Object.entries(rest)
+                .map(([k, v]) => `${k}="${v}"`)
+                .join(' ')}/>`;
+        })
+        .join('');
 }
 
 // Variantes: encuadre del objeto para que las fotos de una misma publicación no sean iguales.
@@ -116,11 +132,19 @@ let total = 0;
 for (const [key, icon, macro, count] of items) {
     const nodes = await iconNodes(icon);
     for (let n = 0; n < count; n++) {
-        const svg = scene(nodes, palettes[macro], framings[n % framings.length], key.length + n);
+        const svg = scene(
+            nodes,
+            palettes[macro],
+            framings[n % framings.length],
+            key.length + n,
+        );
         await page.setContent(`<body style="margin:0">${svg}</body>`);
         const png = join(outDir, `${key}-${n + 1}.png`);
         const webp = join(outDir, `${key}-${n + 1}.webp`);
-        await page.screenshot({ path: png, clip: { x: 0, y: 0, width: 800, height: 600 } });
+        await page.screenshot({
+            path: png,
+            clip: { x: 0, y: 0, width: 800, height: 600 },
+        });
         execFileSync('convert', [png, '-strip', '-quality', '80', webp]);
         rmSync(png);
         total++;
@@ -128,5 +152,12 @@ for (const [key, icon, macro, count] of items) {
 }
 
 await browser.close();
-writeFileSync(join(outDir, 'manifest.json'), JSON.stringify(Object.fromEntries(items.map(([key, , , count]) => [key, count])), null, 2) + '\n');
+writeFileSync(
+    join(outDir, 'manifest.json'),
+    JSON.stringify(
+        Object.fromEntries(items.map(([key, , , count]) => [key, count])),
+        null,
+        2,
+    ) + '\n',
+);
 console.log(`${total} imágenes generadas en public/images/demo`);
