@@ -7,8 +7,8 @@ import EmptyState from '@/components/empty-state';
 import Heading from '@/components/heading';
 import PaginationNav from '@/components/pagination-nav';
 import CoverImage from '@/components/publications/cover-image';
-import ModalityBadge from '@/components/publications/modality-badge';
-import StatusBadge from '@/components/publications/status-badge';
+import ModalityLabel from '@/components/market/modality-label';
+import StatusStamp from '@/components/market/status-stamp';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -231,13 +231,13 @@ export default function AdminPublications({
                                         {formatRelative(publication.created_at)}
                                     </p>
                                     <div className="flex flex-wrap items-center gap-1.5">
-                                        <ModalityBadge
+                                        <ModalityLabel
                                             modality={
                                                 publication.modality.value
                                             }
                                             label={publication.modality.label}
                                         />
-                                        <StatusBadge
+                                        <StatusStamp
                                             status={publication.status.value}
                                             label={publication.status.label}
                                         />

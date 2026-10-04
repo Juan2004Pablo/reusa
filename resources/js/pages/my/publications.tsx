@@ -15,9 +15,9 @@ import Heading from '@/components/heading';
 import PaginationNav from '@/components/pagination-nav';
 import CoverImage from '@/components/publications/cover-image';
 import DeletePublicationDialog from '@/components/publications/delete-publication-dialog';
-import ModalityBadge from '@/components/publications/modality-badge';
-import PriceLabel from '@/components/publications/price-label';
-import StatusBadge from '@/components/publications/status-badge';
+import ModalityLabel from '@/components/market/modality-label';
+import PriceTag from '@/components/market/price-tag';
+import StatusStamp from '@/components/market/status-stamp';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -124,13 +124,13 @@ export default function MyPublications({ publications, counts }: Props) {
                                         {publication.title}
                                     </Link>
                                     <div className="flex flex-wrap items-center gap-1.5">
-                                        <ModalityBadge
+                                        <ModalityLabel
                                             modality={
                                                 publication.modality.value
                                             }
                                             label={publication.modality.label}
                                         />
-                                        <StatusBadge
+                                        <StatusStamp
                                             status={publication.status.value}
                                             label={publication.status.label}
                                         />
@@ -142,7 +142,7 @@ export default function MyPublications({ publications, counts }: Props) {
                                         )}
                                     </div>
                                     <p className="flex flex-wrap items-center gap-x-3 text-sm text-muted-foreground">
-                                        <PriceLabel
+                                        <PriceTag
                                             modality={
                                                 publication.modality.value
                                             }

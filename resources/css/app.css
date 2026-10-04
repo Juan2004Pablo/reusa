@@ -1,4 +1,14 @@
-@import '@fontsource-variable/instrument-sans';
+/*
+ * ReUsa · «Mercado de barrio»
+ * Concepto: el mercado de pulgas de Medellín (San Alejo). Papel con un leve tinte verde,
+ * tinta verde botella, etiquetas colgantes de kraft para los precios y sellos de caucho
+ * para los estados. Titulares en Archivo ancha; cifras, precios y barrios en IBM Plex Mono.
+ * Ver docs/DESIGN.md y .claude/skills/reusa-ui/SKILL.md.
+ */
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
 @import 'tailwindcss';
 
 @import 'tw-animate-css';
@@ -10,13 +20,15 @@
 
 @theme {
     --font-sans:
-        'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+        'Archivo Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    --font-mono:
+        'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
+        monospace;
 
     --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 1px);
+    --radius-sm: calc(var(--radius) - 2px);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -61,97 +73,123 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
 
+    /* Materiales del mercado */
+    --color-paper: var(--paper);
+    --color-kraft: var(--kraft);
+    --color-kraft-ink: var(--kraft-ink);
+    --color-stamp-blue: var(--stamp-blue);
+    --color-stamp-red: var(--stamp-red);
+    --color-note: var(--note);
+    --color-note-ink: var(--note-ink);
+
+    /* Modalidades: colores de marca (puntos, barras). Validados con dataviz en claro y oscuro. */
     --color-donation: var(--donation);
-    --color-donation-foreground: var(--donation-foreground);
     --color-exchange: var(--exchange);
-    --color-exchange-foreground: var(--exchange-foreground);
     --color-sale: var(--sale);
-    --color-sale-foreground: var(--sale-foreground);
 }
 
 :root {
-    --background: oklch(0.99 0.004 110);
-    --foreground: oklch(0.21 0.02 150);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.21 0.02 150);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.21 0.02 150);
-    --primary: oklch(0.48 0.12 155);
-    --primary-foreground: oklch(0.985 0.01 150);
-    --secondary: oklch(0.96 0.012 140);
-    --secondary-foreground: oklch(0.28 0.04 155);
-    --muted: oklch(0.965 0.008 120);
-    --muted-foreground: oklch(0.5 0.02 150);
-    --accent: oklch(0.95 0.03 150);
-    --accent-foreground: oklch(0.3 0.06 155);
-    --destructive: oklch(0.55 0.2 27);
-    --destructive-foreground: oklch(0.985 0 0);
-    --border: oklch(0.91 0.01 130);
-    --input: oklch(0.88 0.012 130);
-    --ring: oklch(0.6 0.12 155);
-    --chart-1: oklch(0.55 0.13 155);
-    --chart-2: oklch(0.55 0.15 260);
-    --chart-3: oklch(0.7 0.15 80);
-    --chart-4: oklch(0.6 0.12 200);
-    --chart-5: oklch(0.6 0.15 25);
-    --radius: 0.75rem;
-    --sidebar: oklch(0.975 0.01 140);
-    --sidebar-foreground: oklch(0.21 0.02 150);
-    --sidebar-primary: oklch(0.48 0.12 155);
-    --sidebar-primary-foreground: oklch(0.985 0.01 150);
-    --sidebar-accent: oklch(0.94 0.03 150);
-    --sidebar-accent-foreground: oklch(0.3 0.06 155);
-    --sidebar-border: oklch(0.91 0.01 130);
-    --sidebar-ring: oklch(0.6 0.12 155);
+    /* Papel y tinta */
+    --background: oklch(0.988 0.004 150);
+    --paper: oklch(0.965 0.008 150);
+    --foreground: oklch(0.22 0.025 160);
+    --card: oklch(0.997 0.002 150);
+    --card-foreground: oklch(0.22 0.025 160);
+    --popover: oklch(0.997 0.002 150);
+    --popover-foreground: oklch(0.22 0.025 160);
 
-    --donation: oklch(0.94 0.06 155);
-    --donation-foreground: oklch(0.36 0.1 155);
-    --exchange: oklch(0.94 0.04 262);
-    --exchange-foreground: oklch(0.38 0.14 262);
-    --sale: oklch(0.95 0.07 85);
-    --sale-foreground: oklch(0.4 0.1 65);
+    /* Verde botella */
+    --primary: oklch(0.42 0.09 158);
+    --primary-foreground: oklch(0.985 0.01 150);
+    --secondary: oklch(0.95 0.012 150);
+    --secondary-foreground: oklch(0.26 0.04 160);
+    --muted: oklch(0.955 0.008 150);
+    --muted-foreground: oklch(0.46 0.022 160);
+    --accent: oklch(0.935 0.028 156);
+    --accent-foreground: oklch(0.3 0.06 158);
+    --destructive: oklch(0.52 0.19 27);
+    --destructive-foreground: oklch(0.985 0 0);
+    --border: oklch(0.885 0.012 150);
+    --input: oklch(0.83 0.014 150);
+    --ring: oklch(0.55 0.1 158);
+    --radius: 0.375rem;
+
+    /* Materiales */
+    --kraft: oklch(0.83 0.065 74);
+    --kraft-ink: oklch(0.29 0.05 60);
+    --kraft-edge: oklch(0.68 0.075 68);
+    --stamp-blue: oklch(0.45 0.15 262);
+    --stamp-red: oklch(0.5 0.19 27);
+    --note: oklch(0.95 0.05 95);
+    --note-ink: oklch(0.3 0.05 80);
+
+    /* Modalidades (marcas) */
+    --donation: oklch(0.55 0.13 152);
+    --exchange: oklch(0.5 0.16 262);
+    --sale: oklch(0.66 0.14 72);
+
+    --chart-1: var(--donation);
+    --chart-2: var(--exchange);
+    --chart-3: var(--sale);
+    --chart-4: oklch(0.55 0.08 200);
+    --chart-5: oklch(0.55 0.15 25);
+
+    --sidebar: oklch(0.965 0.008 150);
+    --sidebar-foreground: oklch(0.22 0.025 160);
+    --sidebar-primary: oklch(0.42 0.09 158);
+    --sidebar-primary-foreground: oklch(0.985 0.01 150);
+    --sidebar-accent: oklch(0.925 0.026 156);
+    --sidebar-accent-foreground: oklch(0.26 0.06 158);
+    --sidebar-border: oklch(0.885 0.012 150);
+    --sidebar-ring: oklch(0.55 0.1 158);
 }
 
 .dark {
-    --background: oklch(0.18 0.012 160);
-    --foreground: oklch(0.96 0.01 140);
-    --card: oklch(0.22 0.014 160);
-    --card-foreground: oklch(0.96 0.01 140);
-    --popover: oklch(0.22 0.014 160);
-    --popover-foreground: oklch(0.96 0.01 140);
-    --primary: oklch(0.72 0.15 155);
-    --primary-foreground: oklch(0.18 0.03 160);
-    --secondary: oklch(0.28 0.02 160);
-    --secondary-foreground: oklch(0.96 0.01 140);
-    --muted: oklch(0.28 0.02 160);
-    --muted-foreground: oklch(0.72 0.02 150);
-    --accent: oklch(0.3 0.04 155);
-    --accent-foreground: oklch(0.96 0.01 140);
-    --destructive: oklch(0.55 0.2 25);
-    --destructive-foreground: oklch(0.985 0 0);
-    --border: oklch(0.3 0.02 160);
-    --input: oklch(0.34 0.02 160);
-    --ring: oklch(0.62 0.12 155);
-    --chart-1: oklch(0.72 0.15 155);
-    --chart-2: oklch(0.7 0.14 260);
-    --chart-3: oklch(0.8 0.15 85);
-    --chart-4: oklch(0.7 0.12 200);
-    --chart-5: oklch(0.68 0.17 25);
-    --sidebar: oklch(0.21 0.014 160);
-    --sidebar-foreground: oklch(0.96 0.01 140);
-    --sidebar-primary: oklch(0.72 0.15 155);
-    --sidebar-primary-foreground: oklch(0.18 0.03 160);
-    --sidebar-accent: oklch(0.3 0.04 155);
-    --sidebar-accent-foreground: oklch(0.96 0.01 140);
-    --sidebar-border: oklch(0.3 0.02 160);
-    --sidebar-ring: oklch(0.62 0.12 155);
+    --background: oklch(0.175 0.014 160);
+    --paper: oklch(0.215 0.016 160);
+    --foreground: oklch(0.95 0.012 140);
+    --card: oklch(0.205 0.014 160);
+    --card-foreground: oklch(0.95 0.012 140);
+    --popover: oklch(0.225 0.016 160);
+    --popover-foreground: oklch(0.95 0.012 140);
 
-    --donation: oklch(0.3 0.06 155);
-    --donation-foreground: oklch(0.86 0.12 155);
-    --exchange: oklch(0.3 0.07 262);
-    --exchange-foreground: oklch(0.85 0.09 255);
-    --sale: oklch(0.32 0.07 80);
-    --sale-foreground: oklch(0.88 0.12 85);
+    --primary: oklch(0.78 0.12 158);
+    --primary-foreground: oklch(0.18 0.03 160);
+    --secondary: oklch(0.26 0.018 160);
+    --secondary-foreground: oklch(0.95 0.012 140);
+    --muted: oklch(0.25 0.016 160);
+    --muted-foreground: oklch(0.74 0.02 150);
+    --accent: oklch(0.28 0.035 158);
+    --accent-foreground: oklch(0.95 0.012 140);
+    --destructive: oklch(0.55 0.19 25);
+    --destructive-foreground: oklch(0.985 0 0);
+    --border: oklch(0.3 0.018 160);
+    --input: oklch(0.36 0.02 160);
+    --ring: oklch(0.66 0.1 158);
+
+    --kraft: oklch(0.72 0.07 72);
+    --kraft-ink: oklch(0.2 0.04 60);
+    --kraft-edge: oklch(0.55 0.07 66);
+    --stamp-blue: oklch(0.76 0.11 262);
+    --stamp-red: oklch(0.74 0.15 25);
+    --note: oklch(0.3 0.04 90);
+    --note-ink: oklch(0.93 0.04 95);
+
+    --donation: oklch(0.66 0.15 152);
+    --exchange: oklch(0.64 0.15 262);
+    --sale: oklch(0.665 0.14 74);
+
+    --chart-4: oklch(0.66 0.08 200);
+    --chart-5: oklch(0.68 0.15 25);
+
+    --sidebar: oklch(0.2 0.015 160);
+    --sidebar-foreground: oklch(0.95 0.012 140);
+    --sidebar-primary: oklch(0.78 0.12 158);
+    --sidebar-primary-foreground: oklch(0.18 0.03 160);
+    --sidebar-accent: oklch(0.27 0.035 158);
+    --sidebar-accent-foreground: oklch(0.95 0.012 140);
+    --sidebar-border: oklch(0.3 0.018 160);
+    --sidebar-ring: oklch(0.66 0.1 158);
 }
 
 @layer base {
@@ -161,5 +199,177 @@
 
     body {
         @apply bg-background text-foreground;
+        font-feature-settings: 'ss01' on;
+    }
+
+    h1,
+    h2,
+    h3 {
+        text-wrap: balance;
+    }
+}
+
+@layer components {
+    /* Titular ancho: la voz de la marca. Usar con moderación. */
+    .type-display {
+        font-family: var(--font-sans);
+        font-stretch: 122%;
+        font-weight: 780;
+        letter-spacing: -0.018em;
+        line-height: 1.02;
+    }
+
+    /* Rótulo de dato: mono, mayúsculas, con aire. */
+    .type-label {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /*
+     * Etiqueta colgante de kraft para el precio: punta a la izquierda con su ojal.
+     * El ojal toma el color de la superficie de atrás (--tag-hole).
+     */
+    .price-tag {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        min-height: 1.85rem;
+        padding: 0.2rem 0.75rem 0.2rem 1.45rem;
+        background: var(--kraft);
+        color: var(--kraft-ink);
+        font-family: var(--font-mono);
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        clip-path: polygon(0.8rem 0, 100% 0, 100% 100%, 0.8rem 100%, 0 50%);
+        border-radius: 0 3px 3px 0;
+    }
+
+    .price-tag::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0.68rem;
+        width: 0.42rem;
+        height: 0.42rem;
+        border-radius: 999px;
+        background: var(--tag-hole, var(--background));
+        box-shadow: inset 0 0 0 1px var(--kraft-edge);
+        transform: translate(-50%, -50%);
+    }
+
+    .price-tag[data-size='lg'] {
+        min-height: 2.75rem;
+        padding: 0.35rem 1.1rem 0.35rem 2.1rem;
+        font-size: 1.6rem;
+        clip-path: polygon(1.15rem 0, 100% 0, 100% 100%, 1.15rem 100%, 0 50%);
+    }
+
+    .price-tag[data-size='lg']::before {
+        left: 1rem;
+        width: 0.6rem;
+        height: 0.6rem;
+    }
+
+    .price-tag[data-kind='word'] {
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .price-tag[data-size='lg'][data-kind='word'] {
+        font-size: 1.05rem;
+    }
+
+    /* Sello de caucho: el estado de la publicación, con la palabra siempre visible. */
+    .status-stamp {
+        display: inline-block;
+        padding: 0.12rem 0.5rem;
+        border: 2px solid currentColor;
+        border-radius: 3px;
+        outline: 1px solid currentColor;
+        outline-offset: 2px;
+        background: color-mix(in oklab, var(--card) 86%, transparent);
+        color: var(--stamp-blue);
+        font-family: var(--font-sans);
+        font-size: 0.78rem;
+        font-stretch: 125%;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        line-height: 1.15;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .status-stamp[data-status='delivered'],
+    .status-stamp[data-status='sold'] {
+        color: var(--stamp-red);
+    }
+
+    .status-stamp[data-tilt='true'] {
+        transform: rotate(-7deg);
+    }
+
+    .status-stamp[data-size='lg'] {
+        padding: 0.25rem 0.85rem;
+        font-size: 1.1rem;
+        border-width: 3px;
+    }
+
+    /* Fila de ficha impresa: «Dato ······ Valor». */
+    .label-row {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+
+    .label-row > dt {
+        flex-shrink: 0;
+    }
+
+    .label-row > .leader {
+        flex: 1;
+        min-width: 1.5rem;
+        border-bottom: 1.5px dotted var(--input);
+        transform: translateY(-0.3em);
+    }
+
+    .label-row > dd {
+        min-width: 0;
+        text-align: right;
+    }
+
+    /* Nota pegada (avisos importantes, como el de pago y entrega). */
+    .paper-note {
+        position: relative;
+        background: var(--note);
+        color: var(--note-ink);
+        border-radius: 2px;
+    }
+
+    .paper-note::before {
+        content: '';
+        position: absolute;
+        top: -0.55rem;
+        left: 50%;
+        width: 4.5rem;
+        height: 1.1rem;
+        background: color-mix(in oklab, var(--kraft) 55%, transparent);
+        transform: translateX(-50%) rotate(-2deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
     }
 }

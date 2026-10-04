@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils';
 import { show } from '@/routes/publications';
 import type { PublicationCard as PublicationCardType } from '@/types';
 import CoverImage from './cover-image';
-import ModalityBadge from './modality-badge';
-import PriceLabel from './price-label';
-import StatusBadge from './status-badge';
+import ModalityLabel from '@/components/market/modality-label';
+import PriceTag from '@/components/market/price-tag';
+import StatusStamp from '@/components/market/status-stamp';
 
 export default function PublicationCard({
     publication,
@@ -28,13 +28,13 @@ export default function PublicationCard({
                         unavailable && 'opacity-70 grayscale',
                     )}
                 />
-                <ModalityBadge
+                <ModalityLabel
                     modality={publication.modality.value}
                     label={publication.modality.label}
                     className="absolute top-3 left-3 shadow-sm"
                 />
                 {unavailable && (
-                    <StatusBadge
+                    <StatusStamp
                         status={publication.status.value}
                         label={publication.status.label}
                         className="absolute top-3 right-3 shadow-sm"
@@ -55,7 +55,7 @@ export default function PublicationCard({
                         {publication.title}
                     </Link>
                 </h3>
-                <PriceLabel
+                <PriceTag
                     modality={publication.modality.value}
                     price={publication.price}
                     className="text-lg"

@@ -14,9 +14,9 @@ import {
 import { useState } from 'react';
 import DeletePublicationDialog from '@/components/publications/delete-publication-dialog';
 import Gallery from '@/components/publications/gallery';
-import ModalityBadge from '@/components/publications/modality-badge';
-import PriceLabel from '@/components/publications/price-label';
-import StatusBadge from '@/components/publications/status-badge';
+import ModalityLabel from '@/components/market/modality-label';
+import PriceTag from '@/components/market/price-tag';
+import StatusStamp from '@/components/market/status-stamp';
 import StatusMenu from '@/components/publications/status-menu';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -108,11 +108,11 @@ export default function PublicationShow({
                         <Card className="gap-4">
                             <CardHeader className="gap-3">
                                 <div className="flex flex-wrap gap-2">
-                                    <ModalityBadge
+                                    <ModalityLabel
                                         modality={publication.modality.value}
                                         label={publication.modality.label}
                                     />
-                                    <StatusBadge
+                                    <StatusStamp
                                         status={publication.status.value}
                                         label={publication.status.label}
                                     />
@@ -120,7 +120,7 @@ export default function PublicationShow({
                                 <h1 className="text-2xl leading-snug font-semibold tracking-tight text-balance">
                                     {publication.title}
                                 </h1>
-                                <PriceLabel
+                                <PriceTag
                                     modality={publication.modality.value}
                                     price={publication.price}
                                     className="text-3xl"
@@ -129,7 +129,7 @@ export default function PublicationShow({
                             <CardContent className="space-y-5">
                                 {publication.modality.value === 'exchange' &&
                                     publication.wanted_in_exchange && (
-                                        <div className="flex gap-3 rounded-lg bg-exchange p-3 text-sm text-exchange-foreground">
+                                        <div className="text-exchange-foreground flex gap-3 rounded-lg bg-exchange p-3 text-sm">
                                             <Repeat
                                                 className="mt-0.5 size-4 shrink-0"
                                                 aria-hidden

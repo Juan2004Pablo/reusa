@@ -3,20 +3,21 @@ import AppLogoIcon from '@/components/app-logo-icon';
 import { cn } from '@/lib/utils';
 import { home } from '@/routes';
 
+/** Logotipo: etiqueta colgante + «ReUsa» en Archivo ancha. */
 export default function Brand({ className }: { className?: string }) {
     return (
         <Link
             href={home()}
             className={cn(
-                'inline-flex items-center gap-2 rounded-md font-semibold tracking-tight focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:outline-none',
+                'inline-flex items-center gap-1.5 rounded-sm text-foreground focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:outline-none',
                 className,
             )}
             aria-label="ReUsa, ir al inicio"
         >
-            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <AppLogoIcon className="size-5 fill-current" />
+            <AppLogoIcon className="size-8 fill-primary text-primary" />
+            <span className="type-display text-xl">
+                Re<span className="text-primary">Usa</span>
             </span>
-            <span className="text-lg">ReUsa</span>
         </Link>
     );
 }
