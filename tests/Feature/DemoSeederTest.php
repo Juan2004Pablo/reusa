@@ -88,6 +88,32 @@ test('demo photos are real image files on the public disk', function () {
     }
 });
 
+test('demo photos come from the versioned illustrations in public/images/demo', function () {
+    $this->seed(DatabaseSeeder::class);
+
+    $bike = Publication::where('title', 'Bicicleta de montaña rodado 26')->firstOrFail();
+
+    expect($bike->images)->toHaveCount(3)
+        ->and($bike->images->pluck('path')->every(fn (string $path) => str_ends_with($path, '.webp')))->toBeTrue()
+        ->and(Storage::disk('public')->get($bike->images[0]->path))
+        ->toBe(file_get_contents(public_path('images/demo/bicicleta-1.webp')));
+});
+
+test('every versioned demo illustration is a valid image file', function () {
+    $manifest = json_decode((string) file_get_contents(public_path('images/demo/manifest.json')), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($manifest)->not->toBeEmpty();
+
+    foreach ($manifest as $key => $count) {
+        foreach (range(1, $count) as $n) {
+            $file = public_path("images/demo/{$key}-{$n}.webp");
+
+            expect(is_file($file))->toBeTrue("falta {$key}-{$n}.webp")
+                ->and(substr((string) file_get_contents($file), 8, 4))->toBe('WEBP');
+        }
+    }
+});
+
 test('seeding twice does not duplicate the demo publications', function () {
     $this->seed(DatabaseSeeder::class);
     $count = Publication::count();

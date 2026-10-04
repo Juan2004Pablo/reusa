@@ -37,6 +37,18 @@ class DemoPublicationSeeder extends Seeder
         'juguetes-y-articulos-infantiles' => [[249, 168, 212], [202, 138, 4]],
     ];
 
+    /**
+     * Archivo de fotos por publicación (en el mismo orden que `publications()`), ubicado en
+     * `public/images/demo/{clave}-{n}.webp`. `null` = sin fotos o sin archivos versionados.
+     *
+     * @var list<string|null>
+     */
+    private const array PHOTOS = [
+        'bicicleta', 'escritorio', 'novelas', 'chaqueta', 'licuadora', 'cuna', 'portatil', 'ollas',
+        'balon', 'guitarra', 'libros-texto', 'taladro', 'catan', 'vestido', 'lampara', 'celular',
+        'juguetes-madera', 'sofa', 'herramientas', null, 'audifonos', 'enlatados',
+    ];
+
     public function run(): void
     {
         if (Publication::query()->exists()) {
@@ -74,19 +86,31 @@ class DemoPublicationSeeder extends Seeder
 
             $publication->save();
 
-            $this->createImages($publication, $category, $data['images']);
+            $this->createImages($publication, $category, $data['images'], self::PHOTOS[$index] ?? null);
         }
     }
 
-    private function createImages(Publication $publication, Category $category, int $count): void
+    /**
+     * Copia las imágenes versionadas de `public/images/demo` al disco público. Si no existen
+     * (por ejemplo, se borraron), genera marcadores de posición con `PlaceholderImage`.
+     */
+    private function createImages(Publication $publication, Category $category, int $count, ?string $photo): void
     {
         $macroSlug = $category->parent->slug ?? $category->slug;
         [$top, $bottom] = self::PALETTES[$macroSlug] ?? [[203, 213, 225], [51, 65, 85]];
         $disk = Storage::disk(PublicationImage::DISK);
 
         for ($position = 0; $position < $count; $position++) {
-            $path = "publications/{$publication->id}/demo-{$position}.png";
-            $disk->put($path, PlaceholderImage::png(480, 360, $top, $bottom, $publication->id * 3 + $position));
+            $source = $photo === null ? null : public_path('images/demo/'.$photo.'-'.($position + 1).'.webp');
+
+            if ($source !== null && is_file($source)) {
+                $path = "publications/{$publication->id}/demo-{$position}.webp";
+                $disk->put($path, (string) file_get_contents($source));
+            } else {
+                $path = "publications/{$publication->id}/demo-{$position}.png";
+                $disk->put($path, PlaceholderImage::png(480, 360, $top, $bottom, $publication->id * 3 + $position));
+            }
+
             $publication->images()->create(['path' => $path, 'position' => $position]);
         }
     }
