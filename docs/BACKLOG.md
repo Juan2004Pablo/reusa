@@ -26,6 +26,12 @@ Ideas y trabajo pendiente que **no** forma parte del avance funcional actual. Se
 
 ## Plataforma y calidad
 
+- Medir cobertura de código en el CI (requiere PCOV o Xdebug).
+- Limitar la frecuencia de creación de publicaciones por usuario (hoy solo hay límite en inicio de sesión y registro).
+- Recorridos E2E automatizados en CI: hoy se verificaron manualmente con Playwright (ver `docs/IMPLEMENTATION_PLAN.md`).
+- Limpieza de fotografías huérfanas en `storage` (por ejemplo, de publicaciones eliminadas lógicamente hace mucho).
+- Restaurar publicaciones eliminadas (soft delete) desde el panel de administración.
+
 - Verificación de correo electrónico y autenticación en dos pasos (el kit ya las soporta con Fortify; hoy están desactivadas).
 - Redimensionado/optimización de imágenes al subirlas y almacenamiento en S3 o similar.
 - Pruebas de componentes (Vitest) y E2E (Playwright) en CI.

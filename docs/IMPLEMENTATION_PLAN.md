@@ -4,37 +4,40 @@
 
 ## Estado por fase
 
-| Fase | Alcance                                                           | Estado    |
-| ---- | ----------------------------------------------------------------- | --------- |
-| 0    | Entorno, idioma es-CO, identidad visual, layout público, docs, CI | En curso  |
-| 1    | Usuarios, roles, términos, inactivos, rate limit                  | Pendiente |
-| 2    | Categorías                                                        | Pendiente |
-| 3    | Publicaciones — backend                                           | Pendiente |
-| 4    | Publicaciones — frontend                                          | Pendiente |
-| 5    | Datos de demostración                                             | Pendiente |
-| 6    | Panel de administración (P1)                                      | Pendiente |
-| 7    | README, capturas, QA final                                        | Pendiente |
+| Fase | Alcance                                                           | Estado |
+| ---- | ----------------------------------------------------------------- | ------ |
+| 0    | Entorno, idioma es-CO, identidad visual, layout público, docs, CI | Hecha  |
+| 1    | Usuarios, roles, términos, inactivos, rate limit                  | Hecha  |
+| 2    | Categorías                                                        | Hecha  |
+| 3    | Publicaciones — backend                                           | Hecha  |
+| 4    | Publicaciones — frontend                                          | Hecha  |
+| 5    | Datos de demostración                                             | Hecha  |
+| 6    | Panel de administración (P1)                                      | Hecha  |
+| 7    | README, capturas, QA final                                        | Hecha  |
 
 ## Notas de ejecución (desviaciones respecto al plan)
 
 - **Fuente tipográfica autoalojada:** el kit descargaba _Instrument Sans_ desde Bunny Fonts durante `npm run build`. Se reemplazó por el paquete npm `@fontsource-variable/instrument-sans` para que el build no dependa de un CDN de terceros.
 - **Tests sin build previo:** `tests/TestCase.php` llama a `withoutVite()`, así que `php artisan test` no exige `npm run build`.
+- **`SyncPublicationImages` reemplaza a `StorePublicationImages`:** una sola Action maneja agregar, quitar y reordenar fotos (tokens `existing:{id}` / `new:{n}`), tanto al crear como al editar.
+- **Un `DTO` pequeño (`PublicationData`)** concentra la regla «precio solo en ventas / qué busco a cambio solo en intercambios».
+- **Sin GD:** la imagen de PHP 8.4 del entorno de desarrollo no trae GD; por eso las fotos de demostración y de las pruebas se generan con PHP puro (`PlaceholderImage`, `fakePhoto()`).
+- **El panel `dashboard` del kit se eliminó:** tras iniciar sesión se llega a «Mis publicaciones» (`fortify.home`).
+- **Normalización del precio:** se aceptan separadores y símbolo (`$ 1.500.000`), pero un signo menos no se descarta (una prueba lo detectó).
+- **`CategoryResource`:** los hijos se resuelven a un arreglo simple; Inertia envolvía el recurso anidado en `{ data: [] }` y rompía los filtros (cubierto con una prueba de regresión).
+- **Cobertura de código:** no se midió porque el entorno no tiene Xdebug ni PCOV.
+- **Rama de trabajo:** `claude/reusa-functional-platform-gwxmwe` en lugar de `feature/initial-advance`.
 
-## Contexto
+## Verificación realizada
 
-ReUsa es un prototipo de plataforma de economía circular comunitaria (donar, intercambiar, vender objetos en desuso) para una comunidad piloto en Medellín (ODS 12). A mitad del proyecto (semana ~8 de 15) se debe presentar un **avance funcional**: una base sólida, probada y bien presentada, no el MVP completo.
-
-### Estado actual verificado del entorno
-
-- Repo `juan2004pablo/reusa` con un único commit: `chore: initial Laravel + React scaffold` = **starter kit oficial de React**: Laravel 13.34, Inertia 3, React 19 + TS, Tailwind 4, shadcn/ui (new-york), **Fortify** (solo `registration` y `resetPasswords` activos; sin 2FA ni verificación de correo), **Wayfinder** (rutas tipadas en TS), **Vite+** (`vp check` = oxlint + oxfmt, reemplaza ESLint/Prettier), Pest 5, Pint, Larastan nivel 7, CI de GitHub Actions (PHP 8.4).
-- `composer.lock` exige **PHP ≥ 8.4** (Pest 5, Symfony 8). El contenedor tiene PHP 8.3.6 y no hay PHP 8.4 en apt; sí hay `dockerd` y Docker Hub es accesible → en este entorno se usará PHP 8.4 vía contenedor Docker (shim `php`/`composer` en el PATH). Node 22 / npm 10 OK (`npm install` ya funciona).
-- `laravel.com` está bloqueado por la red: los comandos se validarán contra el código instalado (`vendor/`, `php artisan list`) en lugar de la documentación en línea.
-
-### Decisiones tomadas con el usuario
-
-- **BD local por defecto: MySQL** (`.env.example` con `DB_CONNECTION=mysql`, base `reusa`); README documenta el cambio a SQLite en una línea. Pruebas: SQLite en memoria (ya configurado en `phpunit.xml`).
-- **PHP 8.4** como requisito (no se toca el lockfile del kit).
-- **Rama**: el entorno exige trabajar en `claude/reusa-functional-platform-gwxmwe` (en lugar de `feature/initial-advance`); commits pequeños y convencionales en ella.
+| Verificación                                  | Resultado                                                                                                              |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `php artisan test`                            | 347 pruebas pasan, 3 omitidas (2FA, desactivada a propósito)                                                           |
+| `pint --test` / PHPStan nivel 7               | Sin hallazgos                                                                                                          |
+| `vp check` / `tsc --noEmit` / `npm run build` | Sin hallazgos                                                                                                          |
+| `migrate:fresh --seed`                        | Verificado en MySQL 8.4 y en SQLite                                                                                    |
+| Recorrido en navegador (Playwright)           | Registro con términos → publicar con fotos → editar → cambiar estado → eliminar; moderación y desactivación de cuentas |
+| Accesibilidad (axe-core, WCAG 2.1 A/AA)       | 0 violaciones en 14 pantallas, en modo claro y oscuro                                                                  |
 
 ---
 
