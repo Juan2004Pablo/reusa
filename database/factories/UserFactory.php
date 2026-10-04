@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\User;
@@ -45,6 +47,12 @@ class UserFactory extends Factory
 
     /**
      * Indicate that the model has two-factor authentication configured.
+     *
+     * Two-factor authentication is not enabled in ReUsa yet (no columns exist),
+     * so this state is intentionally a no-op that keeps the kit's tests compiling.
      */
-    public function withTwoFactor(): static {}
+    public function withTwoFactor(): static
+    {
+        return $this;
+    }
 }

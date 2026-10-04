@@ -1,0 +1,10 @@
+{
+    "Whoops!": "¡Ups!",
+    "Server Error": "Error del servidor",
+    "Service Unavailable": "Servicio no disponible",
+    "Not Found": "No encontrado",
+    "Forbidden": "Acceso denegado",
+    "Unauthorized": "No autorizado",
+    "Page Expired": "Página expirada",
+    "Too Many Requests": "Demasiadas solicitudes"
+}
