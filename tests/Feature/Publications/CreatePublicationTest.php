@@ -51,7 +51,9 @@ test('the create form receives categories and options', function () {
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('publications/create')
-            ->has('categories')
+            ->has('categories', 2) // la macro del test más la creada en beforeEach
+            ->has('categories.1.children', 1)
+            ->where('categories.1.children.0.name', fn ($name) => is_string($name))
             ->has('options.modalities', 3)
             ->has('options.conditions', 3));
 });

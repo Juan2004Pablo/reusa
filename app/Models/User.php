@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\UserRole;
+use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -12,7 +13,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -22,12 +22,12 @@ use Illuminate\Support\Carbon;
  * @property string|null $community
  * @property UserRole $role
  * @property bool $is_active
- * @property Carbon|null $terms_accepted_at
- * @property Carbon|null $email_verified_at
+ * @property CarbonInterface|null $terms_accepted_at
+ * @property CarbonInterface|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property CarbonInterface|null $created_at
+ * @property CarbonInterface|null $updated_at
  */
 // `role` e `is_active` no son asignables en masa: solo los cambia la administración.
 #[Fillable(['name', 'email', 'phone', 'community', 'password', 'terms_accepted_at'])]

@@ -39,6 +39,17 @@ test('the catalog is public and renders the publications page', function () {
             ->has('options.sorts', 3));
 });
 
+test('the category tree reaches the page as plain nested arrays', function () {
+    $this->seed(CategorySeeder::class);
+
+    $categories = $this->get(route('publications.index'))->inertiaProps('categories');
+
+    expect($categories)->toHaveCount(8)
+        ->and($categories[0]['children'])->toBeArray()->toHaveCount(5)
+        ->and($categories[0]['children'][0])->toHaveKeys(['id', 'name', 'slug'])
+        ->and($categories[0]['children'])->not->toHaveKey('data');
+});
+
 test('by default only available and visible publications are listed', function () {
     Publication::factory()->create(['title' => 'Disponible']);
     Publication::factory()->reserved()->create(['title' => 'Reservada']);

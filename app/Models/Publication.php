@@ -9,6 +9,7 @@ use App\Enums\PublicationModality;
 use App\Enums\PublicationSort;
 use App\Enums\PublicationStatus;
 use App\Support\PublicationFilters;
+use Carbon\CarbonInterface;
 use Database\Factories\PublicationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -19,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
@@ -35,12 +35,12 @@ use Illuminate\Support\Str;
  * @property string|null $wanted_in_exchange
  * @property string $location
  * @property PublicationStatus $status
- * @property Carbon|null $hidden_at
+ * @property CarbonInterface|null $hidden_at
  * @property string|null $hidden_reason
  * @property int|null $hidden_by
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
+ * @property CarbonInterface|null $created_at
+ * @property CarbonInterface|null $updated_at
+ * @property CarbonInterface|null $deleted_at
  * @property-read User $user
  * @property-read Category $category
  * @property-read Collection<int, PublicationImage> $images

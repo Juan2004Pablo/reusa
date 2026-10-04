@@ -23,7 +23,8 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'icon' => $this->icon,
-            'children' => self::collection($this->whenLoaded('children')),
+            // Se resuelve a un arreglo simple: Inertia envolvería un recurso anidado en `{ data: [...] }`.
+            'children' => $this->whenLoaded('children', fn () => self::collection($this->children)->resolve()),
         ];
     }
 }
