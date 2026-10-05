@@ -53,7 +53,7 @@ export default function MyPublications({ publications, counts }: Props) {
         <>
             <Head title="Mis publicaciones" />
 
-            <div className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6">
+            <div className="mx-auto w-full max-w-[1400px] space-y-6 p-4 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <Heading
                         title="Mis publicaciones"

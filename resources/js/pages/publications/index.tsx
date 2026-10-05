@@ -1,22 +1,20 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { PackageSearch, Search, SlidersHorizontal, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import EmptyState from '@/components/empty-state';
-import PaginationNav from '@/components/pagination-nav';
-import CatalogFiltersPanel from '@/components/publications/catalog-filters';
-import PublicationCard, {
-    PublicationCardSkeleton,
-} from '@/components/publications/publication-card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Head, Link, router } from "@inertiajs/react";
+import { PackageSearch, Search, SlidersHorizontal, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import EmptyState from "@/components/empty-state";
+import PaginationNav from "@/components/pagination-nav";
+import CatalogFiltersPanel from "@/components/publications/catalog-filters";
+import PublicationCard from "@/components/publications/publication-card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
     Sheet,
     SheetContent,
@@ -24,22 +22,23 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from '@/components/ui/sheet';
-import { useNavigating } from '@/hooks/use-navigating';
+} from "@/components/ui/sheet";
+import { useNavigating } from "@/hooks/use-navigating";
 import {
     activeFilterCount,
     catalogQuery,
     DEFAULT_FILTERS,
-} from '@/lib/catalog';
-import { pluralize } from '@/lib/format';
-import { create, index } from '@/routes/publications';
+} from "@/lib/catalog";
+import { pluralize } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import { create, index } from "@/routes/publications";
 import type {
     CatalogFilters,
     Category,
     Option,
     Paginated,
     PublicationCard as PublicationCardType,
-} from '@/types';
+} from "@/types";
 
 type Props = {
     publications: Paginated<PublicationCardType>;
@@ -96,7 +95,7 @@ export default function PublicationsIndex({
         visit({ ...filters, ...patch });
 
     const reset = () => {
-        setSearch('');
+        setSearch("");
         visit({ ...DEFAULT_FILTERS, sort: filters.sort });
     };
 
@@ -121,42 +120,42 @@ export default function PublicationsIndex({
 
     if (filters.q) {
         chips.push({
-            key: 'q',
+            key: "q",
             label: `“${filters.q}”`,
-            clear: () => change({ q: '' }),
+            clear: () => change({ q: "" }),
         });
     }
 
     if (macro) {
         chips.push({
-            key: 'category',
+            key: "category",
             label: macro.name,
-            clear: () => change({ category: '', subcategory: '' }),
+            clear: () => change({ category: "", subcategory: "" }),
         });
     }
 
     if (sub) {
         chips.push({
-            key: 'subcategory',
+            key: "subcategory",
             label: sub.name,
-            clear: () => change({ subcategory: '' }),
+            clear: () => change({ subcategory: "" }),
         });
     }
 
     if (modality) {
         chips.push({
-            key: 'modality',
+            key: "modality",
             label: modality.label,
-            clear: () => change({ modality: '' }),
+            clear: () => change({ modality: "" }),
         });
     }
 
     if (filters.status !== DEFAULT_FILTERS.status) {
         chips.push({
-            key: 'status',
+            key: "status",
             label:
-                filters.status === 'all'
-                    ? 'Todos los estados'
+                filters.status === "all"
+                    ? "Todos los estados"
                     : (status?.label ?? filters.status),
             clear: () => change({ status: DEFAULT_FILTERS.status }),
         });
@@ -178,7 +177,7 @@ export default function PublicationsIndex({
         <>
             <Head title="Catálogo de objetos" />
 
-            <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
+            <div className="mx-auto w-full max-w-[1600px] px-4 py-8 sm:px-6">
                 <header className="mb-8 space-y-6">
                     <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
                         <div className="space-y-2">
@@ -228,7 +227,7 @@ export default function PublicationsIndex({
                     >
                         <div className="sticky top-24 border-t border-foreground/80 pt-3">
                             <h2 className="type-label mb-5">Filtrar</h2>
-                            {panel('desktop')}
+                            {panel("desktop")}
                         </div>
                     </aside>
 
@@ -240,11 +239,11 @@ export default function PublicationsIndex({
                                 aria-live="polite"
                             >
                                 {navigating
-                                    ? 'Buscando…'
+                                    ? "Buscando…"
                                     : pluralize(
                                           publications.meta.total,
-                                          'objeto',
-                                          'objetos',
+                                          "objeto",
+                                          "objetos",
                                       )}
                             </p>
 
@@ -279,18 +278,18 @@ export default function PublicationsIndex({
                                             </SheetDescription>
                                         </SheetHeader>
                                         <div className="px-4 pb-6">
-                                            {panel('mobile')}
+                                            {panel("mobile")}
                                             <Button
                                                 className="mt-6 w-full"
                                                 onClick={() =>
                                                     setSheetOpen(false)
                                                 }
                                             >
-                                                Ver{' '}
+                                                Ver{" "}
                                                 {pluralize(
                                                     publications.meta.total,
-                                                    'resultado',
-                                                    'resultados',
+                                                    "resultado",
+                                                    "resultados",
                                                 )}
                                             </Button>
                                         </div>
@@ -349,23 +348,14 @@ export default function PublicationsIndex({
                             </ul>
                         )}
 
-                        {navigating ? (
-                            <div
-                                className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3"
-                                aria-busy="true"
-                            >
-                                {Array.from({ length: 6 }, (_, i) => (
-                                    <PublicationCardSkeleton key={i} />
-                                ))}
-                            </div>
-                        ) : publications.data.length === 0 ? (
+                        {publications.data.length === 0 ? (
                             <EmptyState
                                 icon={PackageSearch}
                                 title="No encontramos objetos con esos filtros"
                                 description={
                                     activeCount > 0
-                                        ? 'Prueba con otras palabras o quita algún filtro. También puedes publicar lo que buscas ofrecer.'
-                                        : 'Todavía no hay objetos publicados. ¡Sé la primera persona en compartir algo!'
+                                        ? "Prueba con otras palabras o quita algún filtro. También puedes publicar lo que buscas ofrecer."
+                                        : "Todavía no hay objetos publicados. ¡Sé la primera persona en compartir algo!"
                                 }
                             >
                                 {activeCount > 0 && (
@@ -380,7 +370,13 @@ export default function PublicationsIndex({
                                 </Button>
                             </EmptyState>
                         ) : (
-                            <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
+                            <ul
+                                className={cn(
+                                    "grid gap-x-8 gap-y-14 transition-opacity duration-200 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4",
+                                    navigating && "opacity-50",
+                                )}
+                                aria-busy={navigating}
+                            >
                                 {publications.data.map((publication) => (
                                     <li key={publication.id} className="flex">
                                         <div className="w-full">

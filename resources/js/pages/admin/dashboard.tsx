@@ -78,7 +78,7 @@ export default function AdminDashboard({ stats }: Props) {
         <>
             <Head title="Administración" />
 
-            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
+            <div className="mx-auto w-full max-w-[1400px] p-4 md:p-6">
                 <Heading
                     title="Administración"
                     description="Resumen de la actividad de ReUsa y herramientas de moderación."

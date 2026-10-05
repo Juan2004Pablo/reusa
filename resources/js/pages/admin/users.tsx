@@ -93,7 +93,7 @@ export default function AdminUsers({ users: list, filters, roles }: Props) {
         <>
             <Head title="Usuarios · Administración" />
 
-            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
+            <div className="mx-auto w-full max-w-[1400px] p-4 md:p-6">
                 <Heading
                     title="Administración"
                     description="Gestiona las cuentas de la comunidad."

@@ -8,8 +8,8 @@ export default function AuthSimpleLayout({
     description,
 }: AuthLayoutProps) {
     return (
-        <div className="grid min-h-svh bg-background lg:grid-cols-[1fr_1.1fr]">
-            <aside className="hidden flex-col justify-between bg-primary p-12 text-primary-foreground lg:flex">
+        <div className="grid min-h-svh lg:grid-cols-[1fr_1.1fr]">
+            <aside className="surface-primary hidden flex-col justify-between p-12 text-primary-foreground lg:flex">
                 <Brand className="text-primary-foreground [&_span]:!text-primary-foreground [&_svg]:fill-primary-foreground" />
                 <div className="space-y-5">
                     <p className="type-display text-5xl">

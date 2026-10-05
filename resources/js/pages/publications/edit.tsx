@@ -18,7 +18,7 @@ export default function EditPublication({
     return (
         <>
             <Head title="Editar publicación" />
-            <div className="mx-auto w-full max-w-3xl p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 <Heading
                     title="Editar publicación"
                     description="Actualiza la información o las fotografías de tu objeto."

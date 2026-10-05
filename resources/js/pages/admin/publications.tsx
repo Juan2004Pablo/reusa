@@ -117,7 +117,7 @@ export default function AdminPublications({
         <>
             <Head title="Publicaciones · Administración" />
 
-            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
+            <div className="mx-auto w-full max-w-[1400px] p-4 md:p-6">
                 <Heading
                     title="Administración"
                     description="Modera las publicaciones: oculta las que incumplan las reglas."

@@ -14,7 +14,7 @@ export default function CreatePublication({ categories, options }: Props) {
     return (
         <>
             <Head title="Publicar un objeto" />
-            <div className="mx-auto w-full max-w-3xl p-4 md:p-6">
+            <div className="mx-auto w-full max-w-5xl p-4 md:p-6">
                 <Heading
                     title="Publicar un objeto"
                     description="Cuéntanos qué quieres compartir con tu comunidad."

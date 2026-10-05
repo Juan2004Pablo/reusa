@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { EyeOff, Pencil, Trash2 } from 'lucide-react';
+import { EyeOff, Layers, Pencil, Store, Tag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import ModalityLabel from '@/components/market/modality-label';
 import PriceTag from '@/components/market/price-tag';
@@ -30,14 +30,15 @@ export default function PublicationShow({
         <>
             <Head title={publication.title} />
 
-            <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+            <div className="mx-auto w-full max-w-[1600px] px-4 pt-8 pb-20 sm:px-6 md:pb-28">
                 <nav aria-label="Ruta" className="mb-6">
-                    <ol className="type-label flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground">
+                    <ol className="type-label flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground [&_svg]:size-3.5 [&_svg]:shrink-0">
                         <li>
                             <Link
                                 href={index()}
-                                className="hover:text-foreground hover:underline"
+                                className="inline-flex items-center gap-1.5 hover:text-foreground hover:underline"
                             >
+                                <Store aria-hidden />
                                 Catálogo
                             </Link>
                         </li>
@@ -51,15 +52,20 @@ export default function PublicationShow({
                                                 category: category.parent.slug,
                                             },
                                         })}
-                                        className="hover:text-foreground hover:underline"
+                                        className="inline-flex items-center gap-1.5 hover:text-foreground hover:underline"
                                     >
+                                        <Layers aria-hidden />
                                         {category.parent.name}
                                     </Link>
                                 </li>
                             </>
                         )}
                         <li aria-hidden>/</li>
-                        <li aria-current="page" className="text-foreground">
+                        <li
+                            aria-current="page"
+                            className="inline-flex items-center gap-1.5 text-foreground"
+                        >
+                            <Tag aria-hidden />
                             {category.name}
                         </li>
                     </ol>

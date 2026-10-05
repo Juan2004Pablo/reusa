@@ -23,7 +23,7 @@ export default function SectionHeading({
     index?: string;
     action?: ReactNode;
     as?: 'h1' | 'h2' | 'h3';
-    size?: 'lg' | 'sm';
+    size?: 'xl' | 'lg' | 'sm';
     className?: string;
 }) {
     return (
@@ -46,9 +46,9 @@ export default function SectionHeading({
                     id={id}
                     className={cn(
                         'type-display',
-                        size === 'lg'
-                            ? 'text-2xl sm:text-3xl'
-                            : 'text-xl sm:text-2xl',
+                        size === 'xl' && 'text-3xl sm:text-5xl',
+                        size === 'lg' && 'text-2xl sm:text-3xl',
+                        size === 'sm' && 'text-xl sm:text-2xl',
                     )}
                 >
                     {title}

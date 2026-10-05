@@ -21,7 +21,7 @@ export default function PublicationCard({
     const unavailable = publication.status.value !== 'available';
 
     return (
-        <article className="group relative flex h-full flex-col gap-3 rounded-md focus-within:ring-[3px] focus-within:ring-ring/60 focus-within:ring-offset-4 focus-within:ring-offset-background">
+        <article className="group relative flex h-full flex-col gap-4 rounded-md focus-within:ring-[3px] focus-within:ring-ring/60 focus-within:ring-offset-4 focus-within:ring-offset-background">
             <div className="relative overflow-hidden rounded-md">
                 <CoverImage
                     src={publication.cover_url}
@@ -41,7 +41,7 @@ export default function PublicationCard({
                 )}
             </div>
 
-            <div className="flex flex-1 flex-col gap-2">
+            <div className="flex flex-1 flex-col gap-3">
                 <div className="flex items-center justify-between gap-3">
                     <ModalityLabel
                         modality={publication.modality.value}
@@ -62,7 +62,7 @@ export default function PublicationCard({
                     </Link>
                 </h3>
 
-                <div className="mt-auto flex items-end justify-between gap-3 pt-1">
+                <div className="mt-auto flex items-end justify-between gap-3 pt-2">
                     <PriceTag
                         modality={publication.modality.value}
                         price={publication.price}
@@ -88,7 +88,7 @@ export default function PublicationCard({
 
 export function PublicationCardSkeleton() {
     return (
-        <div className="flex flex-col gap-3" aria-hidden="true">
+        <div className="flex flex-col gap-4" aria-hidden="true">
             <div className="aspect-[4/3] animate-pulse rounded-md bg-paper" />
             <div className="h-3 w-1/3 animate-pulse rounded-sm bg-muted" />
             <div className="h-4 w-4/5 animate-pulse rounded-sm bg-muted" />

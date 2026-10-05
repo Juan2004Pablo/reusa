@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Menu, Plus } from 'lucide-react';
+import { ArrowRight, Menu, Plus } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import Brand from '@/components/brand';
 import { Button } from '@/components/ui/button';
@@ -40,7 +40,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
             </a>
 
             <header className="sticky top-0 z-40 border-b border-foreground/15 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-                <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-4 sm:px-6">
+                <div className="mx-auto flex h-16 w-full max-w-[1600px] items-center gap-4 px-4 sm:px-6">
                     <Brand />
 
                     <nav
@@ -169,12 +169,32 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                 </div>
             </header>
 
-            <main id="contenido" className="flex-1">
+            <main id="contenido" className="flex-1 pb-16 sm:pb-20">
                 {children}
             </main>
 
-            <footer className="border-t bg-paper">
-                <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
+            <footer className="surface-deep">
+                <section className="awning text-primary-foreground">
+                    <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-center justify-between gap-x-10 gap-y-8 px-4 py-14 sm:px-6">
+                        <p className="type-display max-w-2xl text-3xl sm:text-4xl">
+                            ¿Tienes algo guardado que ya no usas?
+                        </p>
+                        <Link
+                            href={user ? create() : register()}
+                            className="cta-stamp group my-2 sm:my-4"
+                        >
+                            {user
+                                ? 'Publicar un objeto'
+                                : 'Crear cuenta y publicar'}
+                            <ArrowRight
+                                className="size-7 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"
+                                strokeWidth={2.5}
+                                aria-hidden
+                            />
+                        </Link>
+                    </div>
+                </section>
+                <div className="mx-auto grid w-full max-w-[1600px] gap-8 px-4 pt-14 pb-10 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
                     <div className="space-y-3">
                         <Brand />
                         <p className="max-w-xs text-sm text-muted-foreground">
